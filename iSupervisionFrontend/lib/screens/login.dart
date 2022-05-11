@@ -3,6 +3,7 @@ import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/screens/user_main.dart';
+import 'package:isupervision/service/database_service.dart';
 
 import '../objects/user.dart';
 
@@ -14,14 +15,14 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  String email = "", password = "";
+
   @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
     var width = MediaQuery.of(context).size.width;
-
-    String email, password;
 
     return Container(
       decoration: const BoxDecoration(
@@ -148,18 +149,12 @@ class _LogInState extends State<LogIn> {
                                         ]),
                                   ),
                                   child: ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
 
-                                        //TODO
-
-                                        User user = User(
-                                          role: Role.student,
-                                          email: "j.k@gmail.com",
-                                          password: "123345/",
-                                          name: "Julian Kapellari",
-                                        );
+                                        User user = await DatabaseService()
+                                            .loginUser(email, password);
 
                                         switch (user.role) {
                                           case Role.student:

@@ -1,25 +1,33 @@
 package com.example.isupervisionbackend.service;
 
+import com.example.isupervisionbackend.model.LoginRequest;
 import com.example.isupervisionbackend.model.User;
 import com.example.isupervisionbackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.expression.ExpressionException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.InputMismatchException;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUser() {
+    public Iterable<User> getAll() {
         return userRepository.findAll();
     }
 
-    public User addUser(User user) {
+    public User register(User user) {
 
-       return userRepository.save(user);
+        return userRepository.save(user);
 
+    }
+
+    public User login(LoginRequest request) throws UsernameNotFoundException {
+
+        return userRepository.findUserByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> new UsernameNotFoundException(""));
     }
 }
