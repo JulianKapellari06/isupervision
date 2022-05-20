@@ -6,26 +6,28 @@ import 'package:isupervision/objects/project.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part '../serialization/user.g.dart';
+part 'user.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class User {
+  int? id;
   String name;
   String email;
   String password;
-  Role role;
+  Role userRole;
   List<Project> projects;
-  List<BachelorProject> bachelorProject;
-  List<MasterProject> masterProject;
+  List<BachelorProject> bachelorProjects;
+  List<MasterProject> masterProjects;
 
   User({
-    required this.role,
+    this.id,
+    required this.userRole,
     required this.email,
     required this.name,
     required this.password,
     required this.projects,
-    required this.bachelorProject,
-    required this.masterProject,
+    required this.bachelorProjects,
+    required this.masterProjects,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

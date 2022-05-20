@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String hintText;
-  final Icon icon;
+  final String? hintText;
+  final Icon? icon;
   final double width;
   final String? Function(String?)? validator;
   final Function(String?)? onSaved;
+  final Function()? onTap;
   final bool isPassword;
   final bool isEmail;
   final TextEditingController controller;
+  final bool? enabled;
 
   const CustomTextField(
       {Key? key,
-      required this.hintText,
-      required this.icon,
+      this.onTap,
+      this.enabled,
+      this.hintText,
+      this.icon,
       required this.controller,
       required this.width,
-      required this.validator,
+      this.validator,
       this.onSaved,
       this.isEmail = false,
       this.isPassword = false})
@@ -30,19 +34,22 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         style: const TextStyle(color: Color(0xFFee707d)),
         controller: controller,
+        enabled: enabled,
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           errorStyle: const TextStyle(
             fontSize: 12,
           ),
-          prefixIcon: InkWell(
-            onTap: () {},
-            onHover: (value) {
-              //TODO
-            },
-            child: icon,
-          ),
+          prefixIcon: icon != null
+              ? InkWell(
+                  onTap: onTap,
+                  onHover: (value) {
+                    //TODO
+                  },
+                  child: icon,
+                )
+              : null,
           filled: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32),

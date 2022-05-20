@@ -1,6 +1,7 @@
 abstract class Work {
   String title;
-  DateTime deadline;
+  String deadline;
+  int? id;
 
-  Work({required this.title, required this.deadline});
+  Work({required this.title, required this.deadline, this.id});
 }

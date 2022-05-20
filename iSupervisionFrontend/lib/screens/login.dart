@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:isupervision/objects/project.dart';
 import 'package:isupervision/objects/role.dart';
+import 'package:isupervision/screens/admin_main.dart';
 import 'package:isupervision/screens/user_main.dart';
 import 'package:isupervision/service/database_service.dart';
 
@@ -150,13 +152,17 @@ class _LogInState extends State<LogIn> {
                                   ),
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      List<Project> projects =
+                                          await DatabaseService()
+                                              .getAllProject();
+                                      print(projects.length);
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
 
                                         User user = await DatabaseService()
                                             .loginUser(email, password);
 
-                                        switch (user.role) {
+                                        switch (user.userRole) {
                                           case Role.student:
                                             Navigator.of(context)
                                                 .pushReplacement(
@@ -166,9 +172,14 @@ class _LogInState extends State<LogIn> {
                                             ));
                                             break;
                                           case Role.admin:
-                                            // TODO: Handle this case.
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  AdminMain(admin: user)),
+                                            ));
                                             break;
-                                          case Role.professor:
+                                          case Role.assistant:
                                             // TODO: Handle this case.
                                             break;
                                         }

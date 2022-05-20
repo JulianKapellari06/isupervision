@@ -7,23 +7,22 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "Work")
-public abstract class Work {
+public class Work {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String title;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date deadline;
+    private String deadline;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})
+    private List<User> user;
 
 }

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:isupervision/objects/role.dart';
+import 'package:isupervision/screens/admin_main.dart';
 import 'package:isupervision/screens/login.dart';
 import 'package:isupervision/screens/user_add_project.dart';
 import 'package:isupervision/screens/user_main.dart';
@@ -18,17 +21,52 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'ISupervision',
         theme: ThemeData(
-          //TODO Change Color to Custom Red
-          primarySwatch: Colors.red,
+          primarySwatch: generateMaterialColor(const Color(0xFFee707d)),
         ),
-        home: //UserMain(
-            // user: User(
-            // role: Role.student,
-            // email: "j.k@gmail.com",
-            // password: "123345/",
-            // name: "Julian Kapellari",
-            // ),
-            //),
-            LogIn());
+        home: AdminMain(
+          admin: User(
+            bachelorProjects: List.empty(),
+            projects: List.empty(),
+            masterProjects: List.empty(),
+            userRole: Role.admin,
+            email: "j.k@gmail.com",
+            password: "12345/",
+            name: "Admin",
+          ),
+        ));
+    // LogIn());
   }
+
+  MaterialColor generateMaterialColor(Color color) {
+    return MaterialColor(color.value, {
+      50: tintColor(color, 0.9),
+      100: tintColor(color, 0.8),
+      200: tintColor(color, 0.6),
+      300: tintColor(color, 0.4),
+      400: tintColor(color, 0.2),
+      500: color,
+      600: shadeColor(color, 0.1),
+      700: shadeColor(color, 0.2),
+      800: shadeColor(color, 0.3),
+      900: shadeColor(color, 0.4),
+    });
+  }
+
+  int tintValue(int value, double factor) =>
+      max(0, min((value + ((255 - value) * factor)).round(), 255));
+
+  Color tintColor(Color color, double factor) => Color.fromRGBO(
+      tintValue(color.red, factor),
+      tintValue(color.green, factor),
+      tintValue(color.blue, factor),
+      1);
+
+  int shadeValue(int value, double factor) =>
+      max(0, min(value - (value * factor).round(), 255));
+
+  Color shadeColor(Color color, double factor) => Color.fromRGBO(
+      shadeValue(color.red, factor),
+      shadeValue(color.green, factor),
+      shadeValue(color.blue, factor),
+      1);
 }

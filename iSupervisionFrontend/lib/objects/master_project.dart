@@ -2,19 +2,20 @@ import 'package:isupervision/objects/bachelor_project.dart';
 import 'package:isupervision/objects/work.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part '../serialization/master_project.g.dart';
+part 'master_project.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class MasterProject extends Work {
   String description;
-  DateTime examDate;
+  String examDate;
 
   MasterProject(
-      {required String title,
+      {int? id,
+      required String title,
       required this.description,
-      required DateTime deadline,
+      required String deadline,
       required this.examDate})
-      : super(title: title, deadline: deadline);
+      : super(title: title, deadline: deadline, id: id);
 
   factory MasterProject.fromJson(Map<String, dynamic> json) =>
       _$MasterProjectFromJson(json);

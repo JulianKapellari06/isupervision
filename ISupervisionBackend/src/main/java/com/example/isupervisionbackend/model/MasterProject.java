@@ -14,8 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class MasterProject extends Work{
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date examDate;
+    private String examDate;
 
     private String description;
 
