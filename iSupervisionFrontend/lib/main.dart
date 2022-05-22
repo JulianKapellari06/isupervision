@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/screens/admin_main.dart';
-import 'package:isupervision/screens/login.dart';
-import 'package:isupervision/screens/user_add_project.dart';
-import 'package:isupervision/screens/user_main.dart';
 
 import 'objects/user.dart';
 
@@ -25,10 +22,8 @@ class MyApp extends StatelessWidget {
         ),
         home: AdminMain(
           admin: User(
-            bachelorProjects: List.empty(),
             projects: List.empty(),
-            masterProjects: List.empty(),
-            userRole: Role.admin,
+            userRole: UserRole.Admin,
             email: "j.k@gmail.com",
             password: "12345/",
             name: "Admin",

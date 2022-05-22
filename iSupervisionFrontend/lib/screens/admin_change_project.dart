@@ -4,24 +4,26 @@ import 'package:isupervision/customWidgets/custom_textstyle.dart';
 import 'package:isupervision/objects/role.dart';
 
 import '../customWidgets/custom_textfield.dart';
-import '../objects/user.dart';
+import '../objects/project.dart';
+
 import '../service/database_service.dart';
 
-class AdminChangeUser extends StatefulWidget {
-  late User user;
+class AdminChangeProject extends StatefulWidget {
+  late Project project;
 
-  AdminChangeUser({required this.user, Key? key}) : super(key: key);
+  AdminChangeProject({required this.project, Key? key}) : super(key: key);
 
   @override
-  State<AdminChangeUser> createState() => _AdminChangeUserState();
+  State<AdminChangeProject> createState() => _AdminChangeProjectState();
 }
 
-class _AdminChangeUserState extends State<AdminChangeUser> {
+class _AdminChangeProjectState extends State<AdminChangeProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _deadlineController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _examDateController = TextEditingController();
 
   bool _changes = false;
 
@@ -29,18 +31,35 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
-    _emailController.text = widget.user.email;
-    _nameController.text = widget.user.name;
-    _idController.text = widget.user.id.toString();
-    _passwordController.text = widget.user.password;
+
+    //TODO Could be better
+    _idController.text = widget.project.id.toString();
+    _titleController.text = widget.project.title;
+    _deadlineController.text = widget.project.deadline;
+
+    if (widget.project.projectRole == ProjectRole.Bachelor) {
+      if (widget.project.description == null) {
+        _descriptionController.text = "";
+      } else {
+        _descriptionController.text = widget.project.description!;
+      }
+    } else if (widget.project.projectRole == ProjectRole.Master) {
+      if (widget.project.examDate == null) {
+        _examDateController.text = "";
+      } else {
+        _examDateController.text = widget.project.examDate!;
+        _descriptionController.text = widget.project.description!;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
-            child: Text("Edit User with Id: " + widget.user.id.toString())),
+            child: Text("Edit User with Id: " + widget.project.id.toString())),
         actions: [
           IconButton(
               onPressed: () {
-                DatabaseService().deleteUser(widget.user.id);
+                DatabaseService().deleteProject(widget.project.id);
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.delete))
@@ -73,16 +92,16 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                         ),
                         ListTile(
                           title: Text(
-                            "Name: ",
+                            "Title: ",
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _nameController,
+                            controller: _titleController,
                             width: 300,
                             validator: RequiredValidator(errorText: "Required"),
                             onSaved: (String? val) {
-                              if (widget.user.name != val) {
-                                widget.user.name = val!;
+                              if (widget.project.title != val) {
+                                widget.project.title = val!;
                                 _changes = true;
                               }
                             },
@@ -90,21 +109,20 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                         ),
                         ListTile(
                           title: Text(
-                            "Email: ",
+                            "Deadline: ",
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _emailController,
+                            controller: _deadlineController,
                             width: 300,
                             validator: MultiValidator([
+                              DateValidator("dd-MM-yyyy",
+                                  errorText: "Wrong Date Format"),
                               RequiredValidator(errorText: "Required"),
-                              EmailValidator(
-                                  errorText:
-                                      "Please enter a valid email address"),
                             ]),
                             onSaved: (String? val) {
-                              if (widget.user.email != val) {
-                                widget.user.email = val!;
+                              if (widget.project.deadline != val) {
+                                widget.project.deadline = val!;
                                 _changes = true;
                               }
                             },
@@ -112,24 +130,43 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                         ),
                         ListTile(
                           title: Text(
-                            "Password: ",
+                            "Description: ",
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _passwordController,
+                            enabled: widget.project.projectRole ==
+                                    ProjectRole.Bachelor ||
+                                widget.project.projectRole ==
+                                    ProjectRole.Master,
+                            controller: _descriptionController,
+                            width: 300,
+                            validator: RequiredValidator(errorText: "Required"),
+                            onSaved: (String? val) {
+                              if (widget.project.description != val) {
+                                widget.project.description = val!;
+                                _changes = true;
+                              }
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            "Exam Date: ",
+                            style: CustomTextStyles.standardText(),
+                          ),
+                          trailing: CustomTextField(
+                            controller: _examDateController,
+                            enabled: widget.project.projectRole ==
+                                ProjectRole.Master,
                             width: 300,
                             validator: MultiValidator([
+                              DateValidator("dd-MM-yyyy",
+                                  errorText: "Wrong Date Format"),
                               RequiredValidator(errorText: "Required"),
-                              MinLengthValidator(6,
-                                  errorText:
-                                      "Password must contain atleast 6 charachters"),
-                              PatternValidator(r'(?=.*?[#?!@$%^&*-/])',
-                                  errorText:
-                                      "Password must have atleast one special charachter")
                             ]),
                             onSaved: (String? val) {
-                              if (widget.user.password != val) {
-                                widget.user.password = val!;
+                              if (widget.project.examDate != val) {
+                                widget.project.examDate = val!;
                                 _changes = true;
                               }
                             },
@@ -144,7 +181,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  for (var value in UserRole.values)
+                                  for (var value in ProjectRole.values)
                                     Expanded(
                                       child: RadioListTile(
                                           title: Text(value.name,
@@ -152,12 +189,14 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                                                   .standardText()),
                                           activeColor: const Color(0xFFee707d),
                                           value: value,
-                                          groupValue: widget.user.userRole,
-                                          onChanged: (UserRole? value) {
+                                          groupValue:
+                                              widget.project.projectRole,
+                                          onChanged: (ProjectRole? value) {
                                             setState(() {
-                                              if (widget.user.userRole !=
+                                              if (widget.project.projectRole !=
                                                   value) {
-                                                widget.user.userRole = value!;
+                                                widget.project.projectRole =
+                                                    value!;
                                                 _changes = true;
                                               }
                                             });
@@ -173,13 +212,13 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                     flex: 1,
                     child: Column(
                       children: [
-                        Text("Projects:",
+                        Text("Students:",
                             style: CustomTextStyles.standardText()),
                         ListView.builder(
                           itemBuilder: ((context, index) {
                             return Row(children: [
-                              Text(widget.user.projects![index].title),
-                              Text(widget.user.projects![index].deadline),
+                              Text(widget.project.user![index].name),
+                              Text(widget.project.user![index].email),
                               IconButton(
                                   onPressed: () {
                                     //TODO DELETE
@@ -188,12 +227,9 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                             ]);
                           }),
                           shrinkWrap: true,
-                          itemCount: widget.user.projects?.length,
+                          itemCount: widget.project.user!.length,
                         ),
-                        Text("Bachelor Project:",
-                            style: CustomTextStyles.standardText()),
-                        //TODO
-                        Text("Master Project:",
+                        Text("Assistants:",
                             style: CustomTextStyles.standardText()),
                         //TODO
                       ],
@@ -212,7 +248,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                         _formKey.currentState!.save();
 
                         if (_changes) {
-                          DatabaseService().updateUser(widget.user);
+                          DatabaseService().updateProject(widget.project);
                         }
                         Navigator.pop(context);
                       }

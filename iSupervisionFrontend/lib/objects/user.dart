@@ -1,7 +1,3 @@
-import 'dart:collection';
-
-import 'package:isupervision/objects/bachelor_project.dart';
-import 'package:isupervision/objects/master_project.dart';
 import 'package:isupervision/objects/project.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,10 +10,8 @@ class User {
   String name;
   String email;
   String password;
-  Role userRole;
-  List<Project> projects;
-  List<BachelorProject> bachelorProjects;
-  List<MasterProject> masterProjects;
+  UserRole userRole;
+  List<Project>? projects;
 
   User({
     this.id,
@@ -25,9 +19,7 @@ class User {
     required this.email,
     required this.name,
     required this.password,
-    required this.projects,
-    required this.bachelorProjects,
-    required this.masterProjects,
+    this.projects,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

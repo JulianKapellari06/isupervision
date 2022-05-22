@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:isupervision/customWidgets/custom_textstyle.dart';
-import 'package:isupervision/objects/bachelor_project.dart';
-import 'package:isupervision/objects/master_project.dart';
 import 'package:isupervision/objects/project.dart';
+import 'package:isupervision/screens/admin_add.dart';
+import 'package:isupervision/screens/admin_change_project.dart';
 import 'package:isupervision/service/database_service.dart';
 
 import '../objects/user.dart';
@@ -21,27 +21,17 @@ class AdminMain extends StatefulWidget {
 }
 
 class _AdminMainState extends State<AdminMain> {
-  // Timer? _timer;
-  Future<List<User>> userList = DatabaseService().getAllUser();
-  Future<List<Project>> projectsList = DatabaseService().getAllProject();
-  Future<List<BachelorProject>> bachelorList =
-      DatabaseService().getAllBachelorProjects();
-  Future<List<MasterProject>> masterList =
-      DatabaseService().getAllMasterProject();
+  late Future<List<User>> userList;
+  late Future<List<Project>> projectsList;
 
-/*  @override
+  @override
   void initState() {
     super.initState();
 
-    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
-      setState(() {
-        projectsList = DatabaseService().getAllProject();
-        userList = DatabaseService().getAllUser();
-        bachelorList = DatabaseService().getAllBachelorProjects();
-        masterList = DatabaseService().getAllMasterProject();
-      });
-    });
-  }*/
+    //TODO refresh after deleting or updating of a user or project
+    userList = DatabaseService().getAllUser();
+    projectsList = DatabaseService().getAllProject();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +41,16 @@ class _AdminMainState extends State<AdminMain> {
     final TextEditingController _searchController = TextEditingController();
     String filter = "";
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminAdd(),
+              )).then((value) => setState((() => {})));
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Admin"),
@@ -60,8 +60,6 @@ class _AdminMainState extends State<AdminMain> {
                 setState(() {
                   projectsList = DatabaseService().getAllProject();
                   userList = DatabaseService().getAllUser();
-                  bachelorList = DatabaseService().getAllBachelorProjects();
-                  masterList = DatabaseService().getAllMasterProject();
                 });
               },
               icon: const Icon(Icons.refresh)),
@@ -99,6 +97,8 @@ class _AdminMainState extends State<AdminMain> {
                         setState(() {
                           userList =
                               DatabaseService().getAllUserFiltered(filter);
+                          projectsList =
+                              DatabaseService().getAllProjectsFiltered(filter);
                         });
                       }
                     },
@@ -162,12 +162,14 @@ class _AdminMainState extends State<AdminMain> {
                                             IconButton(
                                               onPressed: () {
                                                 Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AdminChangeUser(
-                                                              user: user),
-                                                    ));
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AdminChangeUser(
+                                                                  user: user),
+                                                        ))
+                                                    .then((value) =>
+                                                        setState((() => {})));
                                               },
                                               icon: const Icon(Icons.settings),
                                             )
@@ -193,163 +195,69 @@ class _AdminMainState extends State<AdminMain> {
                             style: CustomTextStyles.headerText(),
                           ),
                           FutureBuilder(
-                              future: projectsList,
-                              builder: (context, AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('${snapshot.error} occured'));
-                                  }
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (ctx, index) {
-                                        Project project = snapshot.data[index];
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(),
-                                          ),
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Text(
-                                                project.title,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              Text(
-                                                project.deadline,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                      Icons.settings))
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
+                            future: projectsList,
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('${snapshot.error} occured'));
                                 }
-                              }),
-                          const SizedBox(
-                            height: 25,
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: (ctx, index) {
+                                      Project project = snapshot.data[index];
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(),
+                                        ),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              project.title,
+                                              style: CustomTextStyles
+                                                  .standardText(),
+                                            ),
+                                            Text(
+                                              project.deadline,
+                                              style: CustomTextStyles
+                                                  .standardText(),
+                                            ),
+                                            Text(
+                                              project.projectRole.name,
+                                              style: CustomTextStyles
+                                                  .standardText(),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AdminChangeProject(
+                                                                    project:
+                                                                        project),
+                                                          ))
+                                                      .then((value) =>
+                                                          setState((() => {})));
+                                                },
+                                                icon:
+                                                    const Icon(Icons.settings))
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
                           ),
-                          Text(
-                            "Bachelor Projects",
-                            style: CustomTextStyles.headerText(),
-                          ),
-                          FutureBuilder(
-                              future: bachelorList,
-                              builder: (context, AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('${snapshot.error} occured'));
-                                  }
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (ctx, index) {
-                                        BachelorProject bachelor =
-                                            snapshot.data[index];
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all()),
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Text(
-                                                bachelor.title,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              Text(
-                                                bachelor.deadline,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                      Icons.settings))
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              }),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Text(
-                            "Master Projects",
-                            style: CustomTextStyles.headerText(),
-                          ),
-                          FutureBuilder(
-                              future: masterList,
-                              builder: (context, AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('${snapshot.error} occured'));
-                                  }
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (ctx, index) {
-                                        MasterProject master =
-                                            snapshot.data[index];
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all()),
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Text(
-                                                master.title,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              Text(
-                                                master.deadline,
-                                                style: CustomTextStyles
-                                                    .standardText(),
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                      Icons.settings))
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              })
                         ],
                       ),
                     ),

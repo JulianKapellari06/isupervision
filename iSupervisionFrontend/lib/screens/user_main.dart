@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isupervision/objects/project.dart';
 import 'package:isupervision/screens/login.dart';
 import 'package:isupervision/screens/user_add_project.dart';
 

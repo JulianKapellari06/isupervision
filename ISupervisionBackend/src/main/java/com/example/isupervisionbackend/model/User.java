@@ -16,7 +16,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
@@ -25,26 +25,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Project.class,fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinTable(
             name = "user_project",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "id"))
     private List<Project> projects = new LinkedList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_bachelor",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "id"))
-    private List<BachelorProject> bachelorProjects;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_master",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "id"))
-    private List<MasterProject> masterProjects;
 
 
 

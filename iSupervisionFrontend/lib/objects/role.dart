@@ -1,1 +1,3 @@
-enum Role { student, admin, assistant }
+enum UserRole { Student, Admin, Assistant }
+
+enum ProjectRole { Project, Bachelor, Master }

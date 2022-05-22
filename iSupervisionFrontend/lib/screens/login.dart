@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:isupervision/objects/project.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/screens/admin_main.dart';
 import 'package:isupervision/screens/user_main.dart';
@@ -152,10 +151,6 @@ class _LogInState extends State<LogIn> {
                                   ),
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      List<Project> projects =
-                                          await DatabaseService()
-                                              .getAllProject();
-                                      print(projects.length);
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
 
@@ -163,7 +158,7 @@ class _LogInState extends State<LogIn> {
                                             .loginUser(email, password);
 
                                         switch (user.userRole) {
-                                          case Role.student:
+                                          case UserRole.Student:
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(
@@ -171,7 +166,7 @@ class _LogInState extends State<LogIn> {
                                                   UserMain(user: user)),
                                             ));
                                             break;
-                                          case Role.admin:
+                                          case UserRole.Admin:
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(
@@ -179,7 +174,7 @@ class _LogInState extends State<LogIn> {
                                                   AdminMain(admin: user)),
                                             ));
                                             break;
-                                          case Role.assistant:
+                                          case UserRole.Assistant:
                                             // TODO: Handle this case.
                                             break;
                                         }

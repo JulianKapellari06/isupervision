@@ -6,6 +6,7 @@ import com.example.isupervisionbackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,23 +32,36 @@ public class UserController {
         return userService.register(user);
     }
 
-    @GetMapping("/login")
-    public User login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        System.out.println(request.getEmail());
-        return userService.login(request);
+    @GetMapping("/login/{email}/{password}")
+    public User login(@PathVariable String email, @PathVariable String password) {
+        return userService.login(new LoginRequest(email,password));
     }
+
     @GetMapping("/getUserById/{id}")
     public User getUserById(@PathVariable long id) {
         return userService.findUserById(id);
     }
-    @PostMapping("/addProjectToUser/{user_id}/{project_id}")
-    public void addProjectToUser(@PathVariable long user_id, @PathVariable long project_id) {
-        userService.addProjectToUser(user_id, project_id);
-    }
+
     @GetMapping("/searchUser/{filter}")
     public Iterable<User> searchUser(@PathVariable String filter){
 
         return userService.searchUser(filter);
 
+    }
+
+    @PutMapping(value = "/updateUser")
+    public void updateUser(@RequestBody User user){
+        userService.updateUser(user);
+    }
+
+    //TODO doesnt work
+    @PutMapping("/addProjectToUser/{user_id}/{project_id}")
+    public void addProjectToUser(@PathVariable long user_id, @PathVariable long project_id) {
+        userService.addProjectToUser(user_id, project_id);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public void deleteUser(@PathVariable long id){
+        userService.deleteUser(id);
     }
 }

@@ -1,11 +1,6 @@
 import 'dart:convert';
-import 'dart:html';
-import 'dart:io';
-import 'dart:math';
 
 import 'package:http/http.dart';
-import 'package:isupervision/objects/bachelor_project.dart';
-import 'package:isupervision/objects/master_project.dart';
 import 'package:isupervision/objects/project.dart';
 
 import '../objects/user.dart';
@@ -17,14 +12,14 @@ class DatabaseService {
         "true", // Required for cookies, authorization headers with HTTPS
     "Access-Control-Allow-Headers":
         "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-    "Access-Control-Allow-Methods": "POST, OPTIONS, GET"
+    "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
+    "Accept": "application/json",
+    'Content-type': 'application/json'
   };
 
   Future<User> loginUser(String email, password) async {
-    final body = {"email": "j.k@gmail.com", "password": "/12345"};
-
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/login');
-    uri.replace(queryParameters: body);
+    Uri uri =
+        Uri.parse('http://10.0.0.19:8080/api/user/login/$email/$password');
 
     final response = await get(uri, headers: header);
 
@@ -68,44 +63,6 @@ class DatabaseService {
           .toList();
 
       return user;
-    } else {
-      throw "Unable to retrieve";
-    }
-  }
-
-  Future<List<BachelorProject>> getAllBachelorProjects() async {
-    Uri uri =
-        Uri.parse('http://10.0.0.19:8080/api/project/getAllBachelorProjects');
-    Response response = await get(uri, headers: header);
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
-      List<BachelorProject> bachelor = body
-          .map(
-            (dynamic item) => BachelorProject.fromJson(item),
-          )
-          .toList();
-
-      return bachelor;
-    } else {
-      throw "Unable to retrieve";
-    }
-  }
-
-  Future<List<MasterProject>> getAllMasterProject() async {
-    Uri uri =
-        Uri.parse('http://10.0.0.19:8080/api/project/getAllMasterProjects');
-    Response response = await get(uri, headers: header);
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
-      List<MasterProject> master = body
-          .map(
-            (dynamic item) => MasterProject.fromJson(item),
-          )
-          .toList();
-
-      return master;
     } else {
       throw "Unable to retrieve";
     }
@@ -161,6 +118,83 @@ class DatabaseService {
 
       return project;
     } else {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void deleteUser(int? id) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/deleteUser/$id');
+
+    Response response = await delete(uri, headers: header);
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void updateUser(User user) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/updateUser');
+
+    Response response = await put(
+      uri,
+      headers: header,
+      body: json.encode(user.toJson()),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void updateProject(Project project) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/updateProject');
+    Response response = await put(
+      uri,
+      headers: header,
+      body: json.encode(project.toJson()),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void deleteProject(int? id) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/deleteProject/$id');
+
+    Response response = await delete(uri, headers: header);
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void addProject(Project project) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/addProject');
+    Response response = await post(
+      uri,
+      headers: header,
+      body: json.encode(project.toJson()),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void addUser(User user) async {
+    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/register');
+    Response response = await post(
+      uri,
+      headers: header,
+      body: json.encode(user.toJson()),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
       throw "Unable to retrieve";
     }
   }
