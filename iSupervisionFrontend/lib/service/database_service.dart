@@ -17,9 +17,10 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
+  String ip = "10.31.2.154";
+
   Future<User> loginUser(String email, password) async {
-    Uri uri =
-        Uri.parse('http://10.0.0.19:8080/api/user/login/$email/$password');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');
 
     final response = await get(uri, headers: header);
 
@@ -31,7 +32,7 @@ class DatabaseService {
   }
 
   Future<List<Project>> getAllProject() async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/getAllProjects');
+    Uri uri = Uri.parse('http://$ip:8080/api/project/getAllProjects');
 
     Response response = await get(uri, headers: header);
 
@@ -51,7 +52,7 @@ class DatabaseService {
   }
 
   Future<List<User>> getAllUser() async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/getAll');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/getAll');
     Response response = await get(uri, headers: header);
 
     if (response.statusCode == 200) {
@@ -70,7 +71,7 @@ class DatabaseService {
 
 //Not Used
   Future<User> getUserById(int id) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/getUserById/$id');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/getUserById/$id');
     Response response = await get(uri, headers: header);
 
     if (response.statusCode == 200) {
@@ -82,7 +83,7 @@ class DatabaseService {
   }
 
   Future<List<User>> getAllUserFiltered(String filter) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/searchUser/$filter');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/searchUser/$filter');
 
     Response response = await get(uri, headers: header);
 
@@ -102,8 +103,7 @@ class DatabaseService {
   }
 
   Future<List<Project>> getAllProjectsFiltered(String filter) async {
-    Uri uri =
-        Uri.parse('http://10.0.0.19:8080/api/project/searchProject/$filter');
+    Uri uri = Uri.parse('http://$ip:8080/api/project/searchProject/$filter');
 
     Response response = await get(uri, headers: header);
 
@@ -123,7 +123,7 @@ class DatabaseService {
   }
 
   void deleteUser(int? id) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/deleteUser/$id');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/deleteUser/$id');
 
     Response response = await delete(uri, headers: header);
 
@@ -133,7 +133,7 @@ class DatabaseService {
   }
 
   void updateUser(User user) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/updateUser');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/updateUser');
 
     Response response = await put(
       uri,
@@ -148,7 +148,7 @@ class DatabaseService {
   }
 
   void updateProject(Project project) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/updateProject');
+    Uri uri = Uri.parse('http://$ip:8080/api/project/updateProject');
     Response response = await put(
       uri,
       headers: header,
@@ -162,7 +162,7 @@ class DatabaseService {
   }
 
   void deleteProject(int? id) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/deleteProject/$id');
+    Uri uri = Uri.parse('http://$ip:8080/api/project/deleteProject/$id');
 
     Response response = await delete(uri, headers: header);
 
@@ -172,7 +172,7 @@ class DatabaseService {
   }
 
   void addProject(Project project) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/project/addProject');
+    Uri uri = Uri.parse('http://$ip:8080/api/project/addProject');
     Response response = await post(
       uri,
       headers: header,
@@ -186,7 +186,7 @@ class DatabaseService {
   }
 
   void addUser(User user) async {
-    Uri uri = Uri.parse('http://10.0.0.19:8080/api/user/register');
+    Uri uri = Uri.parse('http://$ip:8080/api/user/register');
     Response response = await post(
       uri,
       headers: header,

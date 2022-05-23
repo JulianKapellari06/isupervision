@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/screens/admin_main.dart';
+import 'package:isupervision/screens/login.dart';
 
 import 'objects/user.dart';
 
@@ -20,16 +21,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: generateMaterialColor(const Color(0xFFee707d)),
         ),
-        home: AdminMain(
-          admin: User(
-            projects: List.empty(),
-            userRole: UserRole.Admin,
-            email: "j.k@gmail.com",
-            password: "12345/",
-            name: "Admin",
-          ),
-        ));
-    // LogIn());
+        home: LogIn());
   }
 
   MaterialColor generateMaterialColor(Color color) {
