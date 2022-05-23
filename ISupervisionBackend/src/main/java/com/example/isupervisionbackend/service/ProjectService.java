@@ -14,6 +14,7 @@ public class ProjectService {
 
     private ProjectRepository projectRepository;
 
+
     public Iterable<Project> getAllProjects() {
 
         return projectRepository.findAll();
@@ -50,7 +51,9 @@ public class ProjectService {
     public void updateProject(Project project) {
         projectRepository.updateProject(project.getId(), project.getTitle(), project.getDeadline(), project.getExamDate(), project.getDescription(), project.getProjectRole(), project.getUser());
     }
+
     public void deleteProject(long id) {
         projectRepository.deleteProjectById(id);
     }
+
 }

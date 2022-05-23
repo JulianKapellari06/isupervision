@@ -28,13 +28,18 @@ public class ISupervisionBackendApplication {
         return (String[] args) -> {
 
             List<Project> projects = new ArrayList<>();
+            List<Project> projects1 = new ArrayList<>();
+            List<Project> projects2 = new ArrayList<>();
             List<User> user = new ArrayList<>();
-            User admin = new User("admin", "admin@gmail.com", "admin!", UserRole.Admin, projects);
-            User student = new User("student", "student@gmail.com", "student!", UserRole.Student, projects);
-            User assistant = new User("assistant", "assistant@gmail.com", "assistant!", UserRole.Assistant, projects);
             Project project = new Project("ISupervisionProject", "03-06-2022", ProjectRole.Project, user);
             Project bachelor = new Project("ISupervisionBachelor", "03-06-2022", "Description", ProjectRole.Bachelor, user);
             Project master = new Project("ISupervisionMaster", "03-06-2022", "12-12-2023", "Description", ProjectRole.Master, user);
+
+            projects.add(project); projects.add(bachelor); projects.add(master);
+            User admin = new User("admin", "admin@gmail.com", "admin!", UserRole.Admin, projects);
+            User student = new User("student", "student@gmail.com", "student!", UserRole.Student, projects1);
+            User assistant = new User("assistant", "assistant@gmail.com", "assistant!", UserRole.Assistant, projects2);
+
 
             userRepository.save(student);
             userRepository.save(assistant);

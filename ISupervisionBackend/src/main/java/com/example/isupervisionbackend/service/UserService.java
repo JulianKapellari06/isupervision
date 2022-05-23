@@ -10,8 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -19,7 +18,6 @@ import java.util.List;
 public class UserService {
 
     private UserRepository userRepository;
-
     private ProjectRepository projectRepository;
     private ProjectService projectService;
 
@@ -49,19 +47,12 @@ public class UserService {
 
     public void addProjectToUser(long user_id, long project_id) {
 
-        //TODO Doesnt work
         User user = findUserById(user_id);
         Project project = projectService.getProjectById(project_id);
 
-        List<Project> projectList = user.getProjects();
-        projectList.add(project);
-
-        user.setProjects(projectList);
-        List<User> userList = project.getUser();
-        userList.add(user);
+        user.addProject(project);
 
         userRepository.save(user);
-        projectRepository.save(project);
 
 
     }
@@ -79,5 +70,26 @@ public class UserService {
 
     public void deleteUser(long id) {
         userRepository.deleteUserById(id);
+    }
+
+    public void addProjectAssistant(Project project, long user_id) {
+
+        User user = findUserById(user_id);
+        user.getProjects().add(project);
+
+        projectRepository.save(project);
+        userRepository.save(user);
+
+    }
+
+    public void deleteProjectFromUser(long user_id, String[] project_ids) {
+
+        //TODO Bad Runtime
+        User user = findUserById(user_id);
+
+        List<String> list = Arrays.asList(project_ids);
+
+        user.getProjects().removeIf(item -> list.contains(item.getId()+""));
+        userRepository.save(user);
     }
 }

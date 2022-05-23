@@ -21,7 +21,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: generateMaterialColor(const Color(0xFFee707d)),
         ),
-        home: LogIn());
+        home: AdminMain(
+          admin: User(
+              userRole: UserRole.Admin,
+              email: "admin@gmail.com",
+              name: "Admin",
+              password: "admin!"),
+        ));
   }
 
   MaterialColor generateMaterialColor(Color color) {

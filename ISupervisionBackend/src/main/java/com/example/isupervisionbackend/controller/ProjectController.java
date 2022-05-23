@@ -38,17 +38,20 @@ public class ProjectController {
     }
 
     @GetMapping("/searchProject/{filter}")
-    public Iterable<Project> searchProject(@PathVariable String filter){
+    public Iterable<Project> searchProject(@PathVariable String filter) {
 
         return projectService.searchProject(filter);
 
     }
+
     @PutMapping("/updateProject")
-    public  void updateProject(@RequestBody Project project){
+    public void updateProject(@RequestBody Project project) {
         projectService.updateProject(project);
     }
+
     @DeleteMapping("/deleteProject/{id}")
-    public void deleteUser(@PathVariable long id){
+    public void deleteUser(@PathVariable long id) {
         projectService.deleteProject(id);
     }
+
 }

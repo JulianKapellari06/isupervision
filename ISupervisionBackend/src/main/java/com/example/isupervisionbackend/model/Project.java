@@ -1,12 +1,13 @@
 package com.example.isupervisionbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,8 +28,10 @@ public class Project {
     @Enumerated(EnumType.STRING)
     private ProjectRole projectRole;
 
-    @ManyToMany(targetEntity = User.class, mappedBy = "projects", cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<User> user;
+    @JsonBackReference
+    @ManyToMany(targetEntity = User.class, mappedBy = "projects", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<User> user = new ArrayList<>();
+
 
     public Project(String title, String deadline, ProjectRole projectRole, List<User> user) {
         this.title = title;

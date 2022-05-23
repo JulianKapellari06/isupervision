@@ -10,6 +10,7 @@ Reenter Password at register
 TextField Icons & AdminAdd errorfield & Text Location
 Admin_main updaten after insertion of Project or User
 DatePicker
+Projects User aufteilen auf Projects/Bachelor/Master
 
 Error:
 Edit UserRole from User changes disappear

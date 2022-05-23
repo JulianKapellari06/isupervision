@@ -17,7 +17,7 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
-  String ip = "10.31.2.154";
+  String ip = "10.0.0.19";
 
   Future<User> loginUser(String email, password) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');
@@ -191,6 +191,33 @@ class DatabaseService {
       uri,
       headers: header,
       body: json.encode(user.toJson()),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void deleteProjectsFromUser(int userId, List<int> list) async {
+    print(list.toString());
+    //TODO trash code
+    String convert = "";
+    for (int i = 0; i < list.length; i++) {
+      if (i == list.length - 1) {
+        convert += list[i].toString();
+      } else {
+        convert += list[i].toString() + ",";
+      }
+    }
+    print(convert);
+
+    Uri uri = Uri.parse(
+        'http://$ip:8080/api/user/deleteProjectFromUser/$userId/$convert');
+
+    Response response = await put(
+      uri,
+      headers: header,
       encoding: Encoding.getByName("utf-8"),
     );
 
