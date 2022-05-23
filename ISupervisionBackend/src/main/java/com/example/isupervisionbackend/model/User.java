@@ -33,6 +33,11 @@ public class User {
     private List<Project> projects = new LinkedList<>();
 
 
-
-
+    public User(String name, String email, String password, UserRole userRole, List<Project> projects) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+        this.projects = projects;
+    }
 }

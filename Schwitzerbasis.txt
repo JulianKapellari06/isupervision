@@ -2,7 +2,6 @@ Todo:
 Limits for projects
 Password Encryption
 Edit Add Project (Validators)
-DatePicker
 
 Schwitzer:
 DateTime Objects
@@ -10,6 +9,8 @@ Description TextField more lines
 Reenter Password at register
 TextField Icons & AdminAdd errorfield & Text Location
 Admin_main updaten after insertion of Project or User
+DatePicker
 
 Error:
 Edit UserRole from User changes disappear
+The request was rejected because the URL contained a potentially malicious String ";" database
