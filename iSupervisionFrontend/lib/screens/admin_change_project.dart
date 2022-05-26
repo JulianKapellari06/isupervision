@@ -214,7 +214,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                       children: [
                         Text("Students:",
                             style: CustomTextStyles.standardText()),
-                        ListView.builder(
+                        /* ListView.builder(
                           itemBuilder: ((context, index) {
                             return Row(children: [
                               Text(widget.project.user![index].name),
@@ -228,10 +228,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                           }),
                           shrinkWrap: true,
                           itemCount: widget.project.user!.length,
-                        ),
-                        Text("Assistants:",
-                            style: CustomTextStyles.standardText()),
-                        //TODO
+                        ),*/
                       ],
                     ),
                   )

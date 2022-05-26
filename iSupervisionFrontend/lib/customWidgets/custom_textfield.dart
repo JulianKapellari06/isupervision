@@ -9,7 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Function()? onTap;
   final bool isPassword;
   final bool isEmail;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool? enabled;
 
   const CustomTextField(

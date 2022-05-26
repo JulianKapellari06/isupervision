@@ -8,33 +8,35 @@ import '../objects/user.dart';
 import '../service/database_service.dart';
 
 class AdminChangeUser extends StatefulWidget {
-  late User user;
+  User user;
 
-  AdminChangeUser({required this.user, Key? key}) : super(key: key);
+  TextEditingController? _emailController;
+  TextEditingController? _nameController;
+  TextEditingController? _idController;
+  TextEditingController? _passwordController;
+  TextEditingController? _repasswordController;
+
+  AdminChangeUser({required this.user, Key? key}) : super(key: key) {
+    _emailController = TextEditingController(text: user.email);
+    _nameController = TextEditingController(text: user.name);
+    _idController = TextEditingController(text: user.id.toString());
+    _passwordController = TextEditingController(text: user.password);
+    _repasswordController = TextEditingController(text: user.password);
+  }
 
   @override
   State<AdminChangeUser> createState() => _AdminChangeUserState();
 }
 
 class _AdminChangeUserState extends State<AdminChangeUser> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
   bool _changes = false;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<int> deleteList = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
-    _emailController.text = widget.user.email;
-    _nameController.text = widget.user.name;
-    _idController.text = widget.user.id.toString();
-    _passwordController.text = widget.user.password;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -71,7 +73,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                             ),
                             trailing: CustomTextField(
                               enabled: false,
-                              controller: _idController,
+                              controller: widget._idController,
                               width: 300,
                             ),
                           ),
@@ -81,7 +83,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                               style: CustomTextStyles.standardText(),
                             ),
                             trailing: CustomTextField(
-                              controller: _nameController,
+                              controller: widget._nameController,
                               width: 300,
                               validator:
                                   RequiredValidator(errorText: "Required"),
@@ -99,7 +101,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                               style: CustomTextStyles.standardText(),
                             ),
                             trailing: CustomTextField(
-                              controller: _emailController,
+                              controller: widget._emailController,
                               width: 300,
                               validator: MultiValidator([
                                 RequiredValidator(errorText: "Required"),
@@ -121,7 +123,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                               style: CustomTextStyles.standardText(),
                             ),
                             trailing: CustomTextField(
-                              controller: _passwordController,
+                              controller: widget._passwordController,
                               width: 300,
                               validator: MultiValidator([
                                 RequiredValidator(errorText: "Required"),
@@ -136,6 +138,21 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                                 if (widget.user.password != val) {
                                   widget.user.password = val!;
                                   _changes = true;
+                                }
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(
+                              "Re-enter Password: ",
+                              style: CustomTextStyles.standardText(),
+                            ),
+                            trailing: CustomTextField(
+                              controller: widget._repasswordController,
+                              width: 300,
+                              validator: (String? value) {
+                                if (value != widget._passwordController!.text) {
+                                  return "Passwords do not match";
                                 }
                               },
                             ),
@@ -235,8 +252,11 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
 
                         if (_changes) {
                           DatabaseService().updateUser(widget.user);
-                          DatabaseService().deleteProjectsFromUser(
-                              widget.user.id!, deleteList);
+
+                          if (deleteList.isNotEmpty) {
+                            DatabaseService().deleteProjectsFromUser(
+                                widget.user.id!, deleteList);
+                          }
                         }
                         Navigator.pop(context);
                       }

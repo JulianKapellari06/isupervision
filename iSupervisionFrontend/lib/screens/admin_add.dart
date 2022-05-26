@@ -26,6 +26,7 @@ class _AdminAddState extends State<AdminAdd> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repasswordController = TextEditingController();
 
   User user =
       User(userRole: UserRole.Student, email: "", name: "", password: "");
@@ -110,6 +111,21 @@ class _AdminAddState extends State<AdminAdd> {
                           ]),
                           onSaved: (String? val) {
                             user.password = val!;
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          "Re-enter Password: ",
+                          style: CustomTextStyles.standardText(),
+                        ),
+                        trailing: CustomTextField(
+                          controller: _repasswordController,
+                          width: 300,
+                          validator: (String? value) {
+                            if (value != _passwordController.text) {
+                              return "Passwords do not match";
+                            }
                           },
                         ),
                       ),
@@ -336,6 +352,7 @@ class _AdminAddState extends State<AdminAdd> {
       _emailController.clear();
       _nameController.clear();
       _passwordController.clear();
+      _repasswordController.clear();
     }
   }
 }
