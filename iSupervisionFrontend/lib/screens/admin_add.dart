@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_number_picker/flutter_number_picker.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:isupervision/objects/project.dart';
 
@@ -32,6 +33,10 @@ class _AdminAddState extends State<AdminAdd> {
       User(userRole: UserRole.Student, email: "", name: "", password: "");
   Project project =
       Project(projectRole: ProjectRole.Master, title: "", deadline: "");
+
+  int? _projectLimits;
+  int? _bachelorLimits;
+  int? _masterLimits;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +105,7 @@ class _AdminAddState extends State<AdminAdd> {
                         trailing: CustomTextField(
                           controller: _passwordController,
                           width: 300,
+                          isPassword: true,
                           validator: MultiValidator([
                             RequiredValidator(errorText: "Required"),
                             MinLengthValidator(6,
@@ -120,6 +126,7 @@ class _AdminAddState extends State<AdminAdd> {
                           style: CustomTextStyles.standardText(),
                         ),
                         trailing: CustomTextField(
+                          isPassword: true,
                           controller: _repasswordController,
                           width: 300,
                           validator: (String? value) {
@@ -155,6 +162,58 @@ class _AdminAddState extends State<AdminAdd> {
                               ]),
                         ),
                       ),
+                      if (user.userRole == UserRole.Assistant)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Limits: ",
+                              style: CustomTextStyles.standardText(),
+                            ),
+                            Text(
+                              "Projects: ",
+                              style: CustomTextStyles.standardText(),
+                            ),
+                            CustomNumberPicker(
+                              valueTextStyle: CustomTextStyles.standardText(),
+                              initialValue: 10,
+                              maxValue: 20,
+                              minValue: 1,
+                              step: 1,
+                              onValue: (value) {
+                                _projectLimits = value as int?;
+                              },
+                            ),
+                            Text(
+                              "Bachelors: ",
+                              style: CustomTextStyles.standardText(),
+                            ),
+                            CustomNumberPicker(
+                              valueTextStyle: CustomTextStyles.standardText(),
+                              initialValue: 3,
+                              maxValue: 5,
+                              minValue: 1,
+                              step: 1,
+                              onValue: (value) {
+                                _bachelorLimits = value as int?;
+                              },
+                            ),
+                            Text(
+                              "Masters: ",
+                              style: CustomTextStyles.standardText(),
+                            ),
+                            CustomNumberPicker(
+                              valueTextStyle: CustomTextStyles.standardText(),
+                              initialValue: 3,
+                              maxValue: 5,
+                              minValue: 1,
+                              step: 1,
+                              onValue: (value) {
+                                _masterLimits = value as int?;
+                              },
+                            ),
+                          ],
+                        ),
                       Container(
                         margin: const EdgeInsets.only(top: 24),
                         constraints: const BoxConstraints(
@@ -165,7 +224,11 @@ class _AdminAddState extends State<AdminAdd> {
                           onPressed: () {
                             if (_formKeyUser.currentState!.validate()) {
                               _formKeyUser.currentState!.save();
-
+                              if (user.userRole == UserRole.Assistant) {
+                                user.bachelorLimit = _bachelorLimits;
+                                user.masterLimit = _masterLimits;
+                                user.projectLimit = _projectLimits;
+                              }
                               DatabaseService().addUser(user);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

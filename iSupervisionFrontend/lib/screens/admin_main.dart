@@ -97,6 +97,7 @@ class _AdminMainState extends State<AdminMain> {
                         setState(() {
                           userList =
                               DatabaseService().getAllUserFiltered(filter);
+
                           projectsList =
                               DatabaseService().getAllProjectsFiltered(filter);
                         });

@@ -64,8 +64,16 @@ public class UserService {
 
     public void updateUser(User user) {
 
-        userRepository.updateUser(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getUserRole(), user.getProjects());
-
+        User existingUser = findUserById(user.getId());
+        existingUser.setProjects(user.getProjects());
+        existingUser.setUserRole(user.getUserRole());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setName(user.getName());
+        existingUser.setBachelorLimit(user.getBachelorLimit());
+        existingUser.setMasterLimit(user.getMasterLimit());
+        existingUser.setProjectLimit(user.getProjectLimit());
+        userRepository.save(existingUser);
     }
 
     public void deleteUser(long id) {

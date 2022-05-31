@@ -24,12 +24,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("SELECT user FROM User user WHERE user.name LIKE %?1% OR user.email LIKE %?1% ORDER BY user.userRole")
     Optional<Iterable<User>> searchUser(String filter);
 
-    //TODO update Projects from User
-    @Transactional
-    @Modifying
-    @Query("UPDATE User u SET u.name = ?2, u.email=?3, u.password=?4, u.userRole=?5 WHERE u.id = ?1")
-    void updateUser(long id, String name, String email, String password, UserRole userRole, List<Project> projects);
-
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.projects = ?2 WHERE u.id = ?1")

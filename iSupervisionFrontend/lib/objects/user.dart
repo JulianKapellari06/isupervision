@@ -12,8 +12,14 @@ class User {
   String password;
   UserRole userRole;
   List<Project>? projects;
+  int? projectLimit;
+  int? bachelorLimit;
+  int? masterLimit;
 
   User({
+    this.projectLimit,
+    this.bachelorLimit,
+    this.masterLimit,
     this.id,
     required this.userRole,
     required this.email,

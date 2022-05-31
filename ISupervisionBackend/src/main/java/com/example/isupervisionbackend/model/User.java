@@ -1,7 +1,8 @@
 package com.example.isupervisionbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User {
 
     @Id
@@ -26,7 +30,12 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    private int projectLimit;
+    private int bachelorLimit;
+    private int masterLimit;
 
+    //@JsonIdentityReference(alwaysAsId=true)
+    @JsonIgnoreProperties({"user"})
     @ManyToMany(targetEntity = Project.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_project",
@@ -34,6 +43,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "id"))
     private List<Project> projects = new ArrayList<>();
 
+    public User(String name, String email, String password, UserRole userRole, int projectLimit, int bachelorLimit, int masterLimit, List<Project> projects) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+        this.projectLimit = projectLimit;
+        this.bachelorLimit = bachelorLimit;
+        this.masterLimit = masterLimit;
+        this.projects = projects;
+    }
 
     public User(String name, String email, String password, UserRole userRole, List<Project> projects) {
         this.name = name;
@@ -42,7 +61,8 @@ public class User {
         this.userRole = userRole;
         this.projects = projects;
     }
-    public void addProject(Project project){
+
+    public void addProject(Project project) {
         projects.add(project);
     }
 }

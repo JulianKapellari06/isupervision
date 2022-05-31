@@ -17,7 +17,7 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
-  String ip = "10.31.2.146";
+  String ip = "10.0.0.19";
 
   Future<User> loginUser(String email, password) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');
@@ -57,6 +57,7 @@ class DatabaseService {
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
+
       List<User> user = body
           .map(
             (dynamic item) => User.fromJson(item),
@@ -134,7 +135,7 @@ class DatabaseService {
 
   void updateUser(User user) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/updateUser');
-
+    print(json.encode(user.toJson()));
     Response response = await put(
       uri,
       headers: header,
@@ -200,7 +201,6 @@ class DatabaseService {
   }
 
   void deleteProjectsFromUser(int userId, List<int> list) async {
-    print(list.toString());
     //TODO trash code
     String convert = "";
     for (int i = 0; i < list.length; i++) {
@@ -210,10 +210,24 @@ class DatabaseService {
         convert += list[i].toString() + ",";
       }
     }
-    print(convert);
 
     Uri uri = Uri.parse(
         'http://$ip:8080/api/user/deleteProjectFromUser/$userId/$convert');
+
+    Response response = await put(
+      uri,
+      headers: header,
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void addProjectToUser(int userId, int projectId) async {
+    Uri uri = Uri.parse(
+        'http://$ip:8080/api/user/addProjectToUser/$userId/$projectId');
 
     Response response = await put(
       uri,

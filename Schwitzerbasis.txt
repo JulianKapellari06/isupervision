@@ -1,16 +1,26 @@
 Todo:
-Limits for projects
 Password Encryption
-Edit Add Project (Validators)
-Get User From Project
+Update Admin Main after Navigator.pop
+TextField Icons & AdminAdd errorfield & Text Location
+Admin Change User -> Option to add Project
+Change primarySwatch Color -> Admin/Assistant Red | Student Blue
+Errorhandling Http Requests
+User-Main: Update Screen after removing project
+User-Main: Update Screen after adding project
+UserAddProject: Add Bachelor after Project finished (Date.expired)
+DateTime Objects
+DESIGN!!!
 
 Schwitzer:
-DateTime Objects
 Description TextField more lines
-TextField Icons & AdminAdd errorfield & Text Location
-Admin_main updaten after insertion of Project or User
 DatePicker
 Projects User aufteilen auf Projects/Bachelor/Master
+Read IP for DatabaseService
+Admin Main filter for Roles
+Security
+UserAddProject getAllProjectwithout user
 
 Error:
+No / in password
 The request was rejected because the URL contained a potentially malicious String ";" database
+JSON Objects just id (Update user project if has project or user) Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Already had POJO for id (java.lang.Long) [[ObjectId: key=3, type=com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator, scope=java.lang.Object]]; nested exception is com.fasterxml.jackson.databind.JsonMappingException: Already had POJO for id (java.lang.Long) [[ObjectId: key=3, type=com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator, scope=java.lang.Object]] (through reference chain: com.example.isupervisionbackend.model.User["projects"]->java.util.ArrayList[0]->com.example.isupervisionbackend.model.Project["id"])]

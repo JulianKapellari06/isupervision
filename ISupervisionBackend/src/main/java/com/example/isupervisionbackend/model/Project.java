@@ -1,7 +1,6 @@
 package com.example.isupervisionbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +14,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "Work")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Project {
 
     @Id
@@ -28,7 +30,8 @@ public class Project {
     @Enumerated(EnumType.STRING)
     private ProjectRole projectRole;
 
-    @JsonBackReference
+    //@JsonIdentityReference(alwaysAsId=true)
+    @JsonIgnoreProperties({"projects"})
     @ManyToMany(targetEntity = User.class, mappedBy = "projects", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<User> user = new ArrayList<>();
 

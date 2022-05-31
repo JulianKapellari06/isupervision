@@ -10,8 +10,22 @@ import '../service/database_service.dart';
 
 class AdminChangeProject extends StatefulWidget {
   late Project project;
+  TextEditingController? _idController;
+  TextEditingController? _titleController;
+  TextEditingController? _deadlineController;
+  TextEditingController? _descriptionController;
+  TextEditingController? _examDateController;
 
-  AdminChangeProject({required this.project, Key? key}) : super(key: key);
+  AdminChangeProject({required this.project, Key? key}) : super(key: key) {
+    _idController = TextEditingController(text: project.id.toString());
+    _titleController = TextEditingController(text: project.title);
+    _deadlineController = TextEditingController(text: project.deadline);
+
+    //If attribute is null set text empty string
+    _descriptionController =
+        TextEditingController(text: project.description ?? "");
+    _examDateController = TextEditingController(text: project.examDate ?? "");
+  }
 
   @override
   State<AdminChangeProject> createState() => _AdminChangeProjectState();
@@ -19,11 +33,6 @@ class AdminChangeProject extends StatefulWidget {
 
 class _AdminChangeProjectState extends State<AdminChangeProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _deadlineController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _examDateController = TextEditingController();
 
   bool _changes = false;
 
@@ -32,32 +41,13 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
 
-    //TODO Could be better
-    _idController.text = widget.project.id.toString();
-    _titleController.text = widget.project.title;
-    _deadlineController.text = widget.project.deadline;
-
-    if (widget.project.projectRole == ProjectRole.Bachelor) {
-      if (widget.project.description == null) {
-        _descriptionController.text = "";
-      } else {
-        _descriptionController.text = widget.project.description!;
-      }
-    } else if (widget.project.projectRole == ProjectRole.Master) {
-      if (widget.project.examDate == null) {
-        _examDateController.text = "";
-      } else {
-        _examDateController.text = widget.project.examDate!;
-        _descriptionController.text = widget.project.description!;
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
             child: Text("Edit User with Id: " + widget.project.id.toString())),
         actions: [
           IconButton(
+              //Deletes the actual project and navigates back to admin main screen
               onPressed: () {
                 DatabaseService().deleteProject(widget.project.id);
                 Navigator.pop(context);
@@ -86,7 +76,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                           ),
                           trailing: CustomTextField(
                             enabled: false,
-                            controller: _idController,
+                            controller: widget._idController,
                             width: 300,
                           ),
                         ),
@@ -96,7 +86,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _titleController,
+                            controller: widget._titleController,
                             width: 300,
                             validator: RequiredValidator(errorText: "Required"),
                             onSaved: (String? val) {
@@ -113,7 +103,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _deadlineController,
+                            controller: widget._deadlineController,
                             width: 300,
                             validator: MultiValidator([
                               DateValidator("dd-MM-yyyy",
@@ -138,9 +128,12 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                                     ProjectRole.Bachelor ||
                                 widget.project.projectRole ==
                                     ProjectRole.Master,
-                            controller: _descriptionController,
+                            controller: widget._descriptionController,
                             width: 300,
-                            validator: RequiredValidator(errorText: "Required"),
+                            validator: widget.project.projectRole !=
+                                    ProjectRole.Project
+                                ? RequiredValidator(errorText: "Required")
+                                : MinLengthValidator(0, errorText: ""),
                             onSaved: (String? val) {
                               if (widget.project.description != val) {
                                 widget.project.description = val!;
@@ -155,15 +148,18 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: _examDateController,
+                            controller: widget._examDateController,
                             enabled: widget.project.projectRole ==
                                 ProjectRole.Master,
                             width: 300,
-                            validator: MultiValidator([
-                              DateValidator("dd-MM-yyyy",
-                                  errorText: "Wrong Date Format"),
-                              RequiredValidator(errorText: "Required"),
-                            ]),
+                            validator: widget.project.projectRole ==
+                                    ProjectRole.Master
+                                ? MultiValidator([
+                                    DateValidator("dd-MM-yyyy",
+                                        errorText: "Wrong Date Format"),
+                                    RequiredValidator(errorText: "Required"),
+                                  ])
+                                : MinLengthValidator(0, errorText: ""),
                             onSaved: (String? val) {
                               if (widget.project.examDate != val) {
                                 widget.project.examDate = val!;
@@ -214,7 +210,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                       children: [
                         Text("Students:",
                             style: CustomTextStyles.standardText()),
-                        /* ListView.builder(
+                        ListView.builder(
                           itemBuilder: ((context, index) {
                             return Row(children: [
                               Text(widget.project.user![index].name),
@@ -228,7 +224,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                           }),
                           shrinkWrap: true,
                           itemCount: widget.project.user!.length,
-                        ),*/
+                        ),
                       ],
                     ),
                   )
@@ -240,11 +236,27 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                   ),
                   width: _width * 0.5,
                   child: ElevatedButton(
+                    /*
+                      Checks wether the input is valid or not.
+                      If changes has been made update the database
+                      Check role of object to set the expected null values;
+                    */
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
 
                         if (_changes) {
+                          switch (widget.project.projectRole) {
+                            case ProjectRole.Project:
+                              widget.project.description = null;
+                              widget.project.examDate = null;
+                              break;
+                            case ProjectRole.Bachelor:
+                              widget.project.examDate = null;
+                              break;
+                            case ProjectRole.Master:
+                              break;
+                          }
                           DatabaseService().updateProject(widget.project);
                         }
                         Navigator.pop(context);

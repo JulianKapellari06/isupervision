@@ -27,4 +27,10 @@ class Project {
       _$ProjectFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
+
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) {
+    return other is Project && id == other.id;
+  }
 }

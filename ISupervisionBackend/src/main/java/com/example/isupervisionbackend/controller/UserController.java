@@ -74,4 +74,5 @@ public class UserController {
     public void addProjectAssistant(@RequestBody Project project, @PathVariable long user_id){
         userService.addProjectAssistant(project, user_id);
     }
+
 }
