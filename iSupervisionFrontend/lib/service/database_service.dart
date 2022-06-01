@@ -17,7 +17,7 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
-  String ip = "10.0.0.19";
+  String ip = "10.31.3.57";
 
   Future<User> loginUser(String email, password) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');

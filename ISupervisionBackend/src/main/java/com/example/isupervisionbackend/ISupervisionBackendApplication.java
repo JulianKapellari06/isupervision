@@ -39,16 +39,15 @@ public class ISupervisionBackendApplication {
             Project bachelor2 = new Project("test2", "03-06-2022", "Description", ProjectRole.Bachelor, user);
             Project master2 = new Project("test3", "03-06-2022", "12-12-2023", "Description", ProjectRole.Master, user);
 
-            student.setProjects(List.of(project));
-            project.setUser(List.of(student));
-            //bachelor.setUser(List.of(student));
-            // master.setUser(List.of(student));
+            student.setProjects(List.of(project, bachelor, master));
 
             admin.setProjects(List.of(project2));
             project2.setUser(List.of(admin));
 
-            assistant.setProjects(List.of(bachelor2));
-            bachelor2.setUser(List.of(assistant));
+            assistant.setProjects(List.of(project, bachelor, master));
+            project.setUser(List.of(student, assistant));
+            bachelor.setUser(List.of(student, assistant));
+            master.setUser(List.of(student, assistant));
 
             userRepository.save(student);
             userRepository.save(assistant);
