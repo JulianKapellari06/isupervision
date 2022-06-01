@@ -283,7 +283,8 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                                         style: CustomTextStyles.standardText(),
                                       ),
                                       Text(
-                                          widget.user.projects![index].deadline,
+                                          widget.user.projects![index].deadline
+                                              .toString(),
                                           style:
                                               CustomTextStyles.standardText()),
                                       Text(

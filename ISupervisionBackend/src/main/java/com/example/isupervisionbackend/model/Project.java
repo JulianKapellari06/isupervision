@@ -1,11 +1,14 @@
 package com.example.isupervisionbackend.model;
 
+import com.example.isupervisionbackend.config.CustomListSerializer;
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,36 +17,36 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "Work")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
-    private String deadline;
-    private String examDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date deadline;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date examDate;
     private String description;
 
     @Enumerated(EnumType.STRING)
     private ProjectRole projectRole;
 
-    //@JsonIdentityReference(alwaysAsId=true)
     @JsonIgnoreProperties({"projects"})
-    @ManyToMany(targetEntity = User.class, mappedBy = "projects", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = User.class, mappedBy = "projects", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JsonSerialize(using = CustomListSerializer.class)
     private List<User> user = new ArrayList<>();
 
 
-    public Project(String title, String deadline, ProjectRole projectRole, List<User> user) {
+    public Project(String title, Date deadline, ProjectRole projectRole, List<User> user) {
         this.title = title;
         this.deadline = deadline;
         this.projectRole = projectRole;
         this.user = user;
     }
 
-    public Project(String title, String deadline, String description, ProjectRole projectRole, List<User> user) {
+    public Project(String title, Date deadline, String description, ProjectRole projectRole, List<User> user) {
         this.title = title;
         this.deadline = deadline;
         this.description = description;
@@ -51,7 +54,7 @@ public class Project {
         this.user = user;
     }
 
-    public Project(String title, String deadline, String examDate, String description, ProjectRole projectRole, List<User> user) {
+    public Project(String title, Date deadline, Date examDate, String description, ProjectRole projectRole, List<User> user) {
 
         this.title = title;
         this.deadline = deadline;

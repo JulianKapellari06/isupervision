@@ -54,4 +54,9 @@ public class ProjectController {
         projectService.deleteProject(id);
     }
 
+    @PutMapping("/deleteUserFromProject/{project_id}/{user_ids}")
+    public void deleteUserFromProject(@PathVariable long project_id, @PathVariable String[] user_ids) {
+        projectService.deleteUserFromProject(project_id, user_ids);
+    }
+
 }

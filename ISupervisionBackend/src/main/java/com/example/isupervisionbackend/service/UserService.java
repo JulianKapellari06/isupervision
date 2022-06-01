@@ -92,7 +92,6 @@ public class UserService {
 
     public void deleteProjectFromUser(long user_id, String[] project_ids) {
 
-        //TODO Bad Runtime
         User user = findUserById(user_id);
 
         List<String> list = Arrays.asList(project_ids);

@@ -225,7 +225,7 @@ class _AdminMainState extends State<AdminMain> {
                                                   .standardText(),
                                             ),
                                             Text(
-                                              project.deadline,
+                                              project.deadline.toString(),
                                               style: CustomTextStyles
                                                   .standardText(),
                                             ),

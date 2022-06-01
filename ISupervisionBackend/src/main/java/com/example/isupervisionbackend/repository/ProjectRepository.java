@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public interface ProjectRepository extends CrudRepository<Project, Integer> {
     @Transactional
     @Modifying
     @Query("UPDATE Project p SET p.title = ?2, p.deadline = ?3, p.examDate = ?4, p.description = ?5, p.projectRole = ?6 WHERE p.id = ?1")
-    void updateProject(long id, String title, String deadline, String examDate, String description, ProjectRole projectRole, List<User> user);
+    void updateProject(long id, String title, Date deadline, Date examDate, String description, ProjectRole projectRole, List<User> user);
 
     @Transactional
     @Modifying

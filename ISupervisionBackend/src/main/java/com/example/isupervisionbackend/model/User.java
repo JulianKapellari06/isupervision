@@ -1,8 +1,10 @@
 package com.example.isupervisionbackend.model;
 
+import com.example.isupervisionbackend.config.CustomListSerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class User {
 
     @Id
@@ -36,11 +35,12 @@ public class User {
 
     //@JsonIdentityReference(alwaysAsId=true)
     @JsonIgnoreProperties({"user"})
-    @ManyToMany(targetEntity = Project.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Project.class, fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
     @JoinTable(
             name = "user_project",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "id"))
+
     private List<Project> projects = new ArrayList<>();
 
     public User(String name, String email, String password, UserRole userRole, int projectLimit, int bachelorLimit, int masterLimit, List<Project> projects) {

@@ -23,4 +23,4 @@ UserAddProject getAllProjectwithout user
 Error:
 No / in password
 The request was rejected because the URL contained a potentially malicious String ";" database
-JSON Objects just id (Update user project if has project or user) Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Already had POJO for id (java.lang.Long) [[ObjectId: key=3, type=com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator, scope=java.lang.Object]]; nested exception is com.fasterxml.jackson.databind.JsonMappingException: Already had POJO for id (java.lang.Long) [[ObjectId: key=3, type=com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator, scope=java.lang.Object]] (through reference chain: com.example.isupervisionbackend.model.User["projects"]->java.util.ArrayList[0]->com.example.isupervisionbackend.model.Project["id"])]
+DeleteUserFromProject doesnt work

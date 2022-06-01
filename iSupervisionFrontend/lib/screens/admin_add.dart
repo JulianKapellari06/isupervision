@@ -31,8 +31,8 @@ class _AdminAddState extends State<AdminAdd> {
 
   User user =
       User(userRole: UserRole.Student, email: "", name: "", password: "");
-  Project project =
-      Project(projectRole: ProjectRole.Master, title: "", deadline: "");
+  Project project = Project(
+      projectRole: ProjectRole.Master, title: "", deadline: DateTime.now());
 
   int? _projectLimits;
   int? _bachelorLimits;
@@ -297,7 +297,7 @@ class _AdminAddState extends State<AdminAdd> {
                                 errorText: "Wrong Date Format"),
                           ]),
                           onSaved: (String? val) {
-                            project.deadline = val!;
+                            project.deadline = DateTime.parse(val!);
                           },
                         ),
                       ),
@@ -333,7 +333,7 @@ class _AdminAddState extends State<AdminAdd> {
                                 errorText: "Wrong Date Format"),
                           ]),
                           onSaved: (String? val) {
-                            project.examDate = val!;
+                            project.examDate = DateTime.parse(val!);
                           },
                         ),
                       ),

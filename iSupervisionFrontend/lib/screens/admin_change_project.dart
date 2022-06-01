@@ -19,12 +19,14 @@ class AdminChangeProject extends StatefulWidget {
   AdminChangeProject({required this.project, Key? key}) : super(key: key) {
     _idController = TextEditingController(text: project.id.toString());
     _titleController = TextEditingController(text: project.title);
-    _deadlineController = TextEditingController(text: project.deadline);
+    _deadlineController =
+        TextEditingController(text: project.deadline.toString());
 
     //If attribute is null set text empty string
     _descriptionController =
         TextEditingController(text: project.description ?? "");
-    _examDateController = TextEditingController(text: project.examDate ?? "");
+    _examDateController =
+        TextEditingController(text: project.examDate.toString());
   }
 
   @override
@@ -35,6 +37,8 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _changes = false;
+
+  List<int> deleteList = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +116,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             ]),
                             onSaved: (String? val) {
                               if (widget.project.deadline != val) {
-                                widget.project.deadline = val!;
+                                widget.project.deadline = DateTime.parse(val!);
                                 _changes = true;
                               }
                             },
@@ -162,7 +166,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                                 : MinLengthValidator(0, errorText: ""),
                             onSaved: (String? val) {
                               if (widget.project.examDate != val) {
-                                widget.project.examDate = val!;
+                                widget.project.examDate = DateTime.parse(val!);
                                 _changes = true;
                               }
                             },
@@ -206,26 +210,66 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                   ),
                   Expanded(
                     flex: 1,
-                    child: Column(
-                      children: [
-                        Text("Students:",
-                            style: CustomTextStyles.standardText()),
-                        ListView.builder(
-                          itemBuilder: ((context, index) {
-                            return Row(children: [
-                              Text(widget.project.user![index].name),
-                              Text(widget.project.user![index].email),
-                              IconButton(
-                                  onPressed: () {
-                                    //TODO DELETE
-                                  },
-                                  icon: const Icon(Icons.delete))
-                            ]);
-                          }),
-                          shrinkWrap: true,
-                          itemCount: widget.project.user!.length,
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Projects:",
+                              style: CustomTextStyles.headerText()),
+                          ListView.builder(
+                            itemBuilder: ((context, index) {
+                              return Container(
+                                color: deleteList.contains(
+                                        widget.project.user![index].id)
+                                    ? Colors.red
+                                    : Colors.transparent,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        widget.project.user![index].name,
+                                        style: CustomTextStyles.standardText(),
+                                      ),
+                                      Text(widget.project.user![index].email,
+                                          style:
+                                              CustomTextStyles.standardText()),
+                                      Text(
+                                          widget.project.user![index].userRole
+                                              .name,
+                                          style:
+                                              CustomTextStyles.standardText()),
+                                      IconButton(
+                                        onPressed: () {
+                                          /*
+                                            Adds or removes the id from that project into deleting list. 
+                                          */
+                                          setState(() {
+                                            if (deleteList.contains(widget
+                                                .project.user![index].id!)) {
+                                              deleteList.remove(widget
+                                                  .project.user![index].id!);
+                                            } else {
+                                              deleteList.add(widget
+                                                  .project.user![index].id!);
+                                            }
+                                          });
+                                        },
+                                        icon: Icon(deleteList.contains(
+                                                widget.project.user![index].id!)
+                                            ? Icons.add_task
+                                            : Icons.delete),
+                                        color: Colors.white,
+                                      )
+                                    ]),
+                              );
+                            }),
+                            shrinkWrap: true,
+                            itemCount: widget.project.user?.length,
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ]),
@@ -258,6 +302,10 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                               break;
                           }
                           DatabaseService().updateProject(widget.project);
+                        }
+                        if (deleteList.isNotEmpty) {
+                          DatabaseService().deleteUserFromProjects(
+                              widget.project.id!, deleteList);
                         }
                         Navigator.pop(context);
                       }

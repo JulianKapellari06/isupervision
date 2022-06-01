@@ -8,9 +8,9 @@ part 'project.g.dart';
 class Project {
   ProjectRole projectRole;
   String? description;
-  String? examDate;
+  DateTime? examDate;
   String title;
-  String deadline;
+  DateTime deadline;
   int? id;
   List<User>? user;
 

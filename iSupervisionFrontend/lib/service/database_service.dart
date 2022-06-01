@@ -239,4 +239,30 @@ class DatabaseService {
       throw "Unable to retrieve";
     }
   }
+
+  void deleteUserFromProjects(int projectId, List<int> list) async {
+    //TODO trash code
+    String convert = "";
+    for (int i = 0; i < list.length; i++) {
+      if (i == list.length - 1) {
+        convert += list[i].toString();
+      } else {
+        convert += list[i].toString() + ",";
+      }
+    }
+    print("$projectId / $convert");
+
+    Uri uri = Uri.parse(
+        'http://$ip:8080/api/project/deleteUserFromProject/$projectId/$convert');
+
+    Response response = await put(
+      uri,
+      headers: header,
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
 }

@@ -103,7 +103,7 @@ class _UserMainState extends State<UserMain> {
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
-                          projectList[index].deadline,
+                          projectList[index].deadline.toString(),
                           style: CustomTextStyles.standardText(),
                         ),
                         IconButton(
@@ -152,7 +152,7 @@ class _UserMainState extends State<UserMain> {
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
-                          bachelorList[index].deadline,
+                          bachelorList[index].deadline.toString(),
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
@@ -204,7 +204,7 @@ class _UserMainState extends State<UserMain> {
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
-                          masterList[index].deadline,
+                          masterList[index].deadline.toString(),
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
@@ -212,7 +212,7 @@ class _UserMainState extends State<UserMain> {
                           style: CustomTextStyles.standardText(),
                         ),
                         Text(
-                          masterList[index].examDate!,
+                          masterList[index].examDate!.toString(),
                           style: CustomTextStyles.standardText(),
                         ),
                         IconButton(

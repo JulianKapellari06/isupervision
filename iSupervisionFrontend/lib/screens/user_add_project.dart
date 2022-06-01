@@ -103,7 +103,7 @@ class _UserAddProjectState extends State<UserAddProject> {
                                                 CustomTextStyles.standardText(),
                                           ),
                                           Text(
-                                            project.deadline,
+                                            project.deadline.toString(),
                                             style:
                                                 CustomTextStyles.standardText(),
                                           ),

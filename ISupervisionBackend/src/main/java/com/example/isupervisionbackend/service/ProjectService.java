@@ -2,11 +2,15 @@ package com.example.isupervisionbackend.service;
 
 import com.example.isupervisionbackend.model.Project;
 import com.example.isupervisionbackend.model.ProjectRole;
+import com.example.isupervisionbackend.model.User;
 import com.example.isupervisionbackend.repository.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -56,4 +60,15 @@ public class ProjectService {
         projectRepository.deleteProjectById(id);
     }
 
+    public void deleteUserFromProject(long project_id, String[] user_ids) {
+
+        Project project = getProjectById(project_id);
+
+        List<String> list = Arrays.asList(user_ids);
+
+        project.getUser().removeIf(item -> list.contains(item.getId()+""));
+
+        projectRepository.save(project);
+
+    }
 }

@@ -11,19 +11,21 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
           ?.map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
       description: json['description'] as String?,
-      examDate: json['examDate'] as String?,
+      examDate: json['examDate'] == null
+          ? null
+          : DateTime.parse(json['examDate'] as String),
       projectRole: $enumDecode(_$ProjectRoleEnumMap, json['projectRole']),
       title: json['title'] as String,
-      deadline: json['deadline'] as String,
+      deadline: DateTime.parse(json['deadline'] as String),
       id: json['id'] as int?,
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'projectRole': _$ProjectRoleEnumMap[instance.projectRole],
       'description': instance.description,
-      'examDate': instance.examDate,
+      'examDate': instance.examDate?.toIso8601String(),
       'title': instance.title,
-      'deadline': instance.deadline,
+      'deadline': instance.deadline.toIso8601String(),
       'id': instance.id,
       'user': instance.user?.map((e) => e.toJson()).toList(),
     };

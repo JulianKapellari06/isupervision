@@ -9,8 +9,10 @@ import com.example.isupervisionbackend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,8 @@ public class ISupervisionBackendApplication {
     public CommandLineRunner run(UserRepository userRepository, ProjectRepository projectRepository) throws Exception {
         return (String[] args) -> {
 
+            Date date = new Date();
+
             List<Project> projects = new ArrayList<>();
             List<User> user = new ArrayList<>();
 
@@ -32,12 +36,12 @@ public class ISupervisionBackendApplication {
             User student = new User("student", "student@gmail.com", "student!", UserRole.Student, projects);
             User assistant = new User("assistant", "assistant@gmail.com", "assistant!", UserRole.Assistant, projects);
 
-            Project project = new Project("ISupervisionProject", "03-06-2022", ProjectRole.Project, user);
-            Project bachelor = new Project("ISupervisionBachelor", "03-06-2022", "Description", ProjectRole.Bachelor, user);
-            Project master = new Project("ISupervisionMaster", "03-06-2022", "12-12-2023", "Description", ProjectRole.Master, user);
-            Project project2 = new Project("test1", "03-06-2022", ProjectRole.Project, user);
-            Project bachelor2 = new Project("test2", "03-06-2022", "Description", ProjectRole.Bachelor, user);
-            Project master2 = new Project("test3", "03-06-2022", "12-12-2023", "Description", ProjectRole.Master, user);
+            Project project = new Project("ISupervisionProject", date, ProjectRole.Project, user);
+            Project bachelor = new Project("ISupervisionBachelor", date, "Description", ProjectRole.Bachelor, user);
+            Project master = new Project("ISupervisionMaster", date, date, "Description", ProjectRole.Master, user);
+            Project project2 = new Project("test1", date, ProjectRole.Project, user);
+            Project bachelor2 = new Project("test2", date, "Description", ProjectRole.Bachelor, user);
+            Project master2 = new Project("test3", date, date, "Description", ProjectRole.Master, user);
 
             student.setProjects(List.of(project, bachelor, master));
 
