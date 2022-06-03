@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:intl/intl.dart';
 import 'package:isupervision/objects/project.dart';
 
 import '../customWidgets/custom_textfield.dart';
@@ -29,6 +30,8 @@ class _AdminAddState extends State<AdminAdd> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repasswordController = TextEditingController();
 
+  DateTime deadline = DateTime.now();
+  DateTime examDate = DateTime.now();
   User user =
       User(userRole: UserRole.Student, email: "", name: "", password: "");
   Project project = Project(
@@ -289,16 +292,30 @@ class _AdminAddState extends State<AdminAdd> {
                           style: CustomTextStyles.standardText(),
                         ),
                         trailing: CustomTextField(
+                          icon: const Icon(Icons.edit_calendar),
+                          onTap: () async {
+                            DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: deadline,
+                                firstDate: deadline,
+                                lastDate: DateTime(2100));
+
+                            if (newDate == null) {
+                              return;
+                            }
+                            setState(() {
+                              deadline = newDate;
+                              _deadlineController.text =
+                                  "${deadline.day}-${deadline.month}-${deadline.year}";
+                              project.deadline = deadline;
+                            });
+                          },
                           controller: _deadlineController,
+                          readOnly: true,
                           width: 300,
                           validator: MultiValidator([
                             RequiredValidator(errorText: "Required"),
-                            DateValidator("dd-MM-yyyy",
-                                errorText: "Wrong Date Format"),
                           ]),
-                          onSaved: (String? val) {
-                            project.deadline = DateTime.parse(val!);
-                          },
                         ),
                       ),
                       ListTile(
@@ -312,7 +329,9 @@ class _AdminAddState extends State<AdminAdd> {
                                   project.projectRole == ProjectRole.Master,
                           controller: _descriptionController,
                           width: 300,
-                          validator: RequiredValidator(errorText: "Required"),
+                          validator: project.projectRole != ProjectRole.Project
+                              ? RequiredValidator(errorText: "Required")
+                              : MinLengthValidator(0, errorText: ""),
                           onSaved: (String? val) {
                             project.description = val!;
                           },
@@ -324,18 +343,31 @@ class _AdminAddState extends State<AdminAdd> {
                           style: CustomTextStyles.standardText(),
                         ),
                         trailing: CustomTextField(
-                          controller: _examDateController,
-                          enabled: project.projectRole == ProjectRole.Master,
-                          width: 300,
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: "Required"),
-                            DateValidator("dd-MM-yyyy",
-                                errorText: "Wrong Date Format"),
-                          ]),
-                          onSaved: (String? val) {
-                            project.examDate = DateTime.parse(val!);
-                          },
-                        ),
+                            enabled: project.projectRole == ProjectRole.Master,
+                            icon: const Icon(Icons.edit_calendar),
+                            onTap: () async {
+                              DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: deadline,
+                                  firstDate: deadline,
+                                  lastDate: DateTime(2100));
+
+                              if (newDate == null) {
+                                return;
+                              }
+                              setState(() {
+                                examDate = newDate;
+                                _examDateController.text =
+                                    "${examDate.day}-${examDate.month}-${examDate.year}";
+                                project.examDate = examDate;
+                              });
+                            },
+                            controller: _examDateController,
+                            readOnly: true,
+                            width: 300,
+                            validator: project.projectRole != ProjectRole.Master
+                                ? MinLengthValidator(0, errorText: "")
+                                : RequiredValidator(errorText: "Required")),
                       ),
                       ListTile(
                         title: Text("Role: ",
@@ -357,6 +389,7 @@ class _AdminAddState extends State<AdminAdd> {
                                         onChanged: (ProjectRole? value) {
                                           setState(() {
                                             project.projectRole = value!;
+                                            clearEditingController(value);
                                           });
                                         }),
                                   )
@@ -403,6 +436,18 @@ class _AdminAddState extends State<AdminAdd> {
         ),
       ),
     );
+  }
+
+  clearEditingController(ProjectRole role) {
+    switch (role) {
+      case ProjectRole.Bachelor:
+        _examDateController.clear();
+        break;
+      case ProjectRole.Project:
+        _examDateController.clear();
+        _descriptionController.clear();
+        break;
+    }
   }
 
   clearTextInput(bool user) {

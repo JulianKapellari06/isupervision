@@ -114,33 +114,8 @@ class _UserAddProjectState extends State<UserAddProject> {
                                           ),
                                           IconButton(
                                               onPressed: () {
-                                                if (widget.user.projects!
-                                                    .contains(project)) {
-                                                  errorDialog(context,
-                                                      "This project is already yours.");
-                                                } else if (project
-                                                            .projectRole ==
-                                                        ProjectRole.Bachelor &&
-                                                    !widget.user.projects!.any(
-                                                        (element) =>
-                                                            element
-                                                                .projectRole ==
-                                                            ProjectRole
-                                                                .Project)) {
-                                                  errorDialog(context,
-                                                      "Before you can make a Bachelor project you have to be done with a project.");
-                                                } else if (project
-                                                            .projectRole ==
-                                                        ProjectRole.Master &&
-                                                    !widget.user.projects!.any(
-                                                        (element) =>
-                                                            element
-                                                                .projectRole ==
-                                                            ProjectRole
-                                                                .Bachelor)) {
-                                                  errorDialog(context,
-                                                      "Before you can make a Master project you have to be done with a Bachelor project.");
-                                                } else {
+                                                if (checkAddProject(
+                                                    project, context)) {
                                                   confirmationDialog(
                                                       context, project);
                                                 }
@@ -173,6 +148,78 @@ class _UserAddProjectState extends State<UserAddProject> {
     );
   }
 
+  bool checkAddProject(Project project, BuildContext context) {
+    if (widget.user.projects!.contains(project)) {
+      errorDialog(context, "This project is already yours.");
+      return false;
+    } else {
+      if (widget.user.userRole == UserRole.Student) {
+        switch (project.projectRole) {
+          case ProjectRole.Bachelor:
+            if (!widget.user.projects!.any((element) =>
+                element.projectRole == ProjectRole.Project &&
+                element.deadline.isBefore(DateTime.now()))) {
+              errorDialog(context,
+                  "Before you can make a Bachelor project you have to be done with a project.");
+              return false;
+            }
+
+            break;
+          case ProjectRole.Master:
+            if (!widget.user.projects!.any((element) =>
+                element.projectRole == ProjectRole.Bachelor &&
+                element.deadline.isBefore(DateTime.now()))) {
+              errorDialog(context,
+                  "Before you can make a Master project you have to be done with a Bachelor project.");
+              return false;
+            }
+
+            break;
+        }
+        return true;
+      } else {
+        if (project.user!
+            .any((element) => element.userRole == UserRole.Assistant)) {
+          errorDialog(context, "This project already has an assistant.");
+          return false;
+        } else {
+          switch (project.projectRole) {
+            case ProjectRole.Project:
+              int projectAmount = widget.user.projects!
+                  .where(
+                      (element) => element.projectRole == ProjectRole.Project)
+                  .length;
+              if (projectAmount == widget.user.projectLimit) {
+                errorDialog(context, "Limit reached");
+                return false;
+              }
+              break;
+            case ProjectRole.Bachelor:
+              int projectAmount = widget.user.projects!
+                  .where(
+                      (element) => element.projectRole == ProjectRole.Bachelor)
+                  .length;
+              if (projectAmount == widget.user.bachelorLimit) {
+                errorDialog(context, "Limit reached");
+                return false;
+              }
+              break;
+            case ProjectRole.Master:
+              int projectAmount = widget.user.projects!
+                  .where((element) => element.projectRole == ProjectRole.Master)
+                  .length;
+              if (projectAmount == widget.user.masterLimit) {
+                errorDialog(context, "Limit reached");
+                return false;
+              }
+              break;
+          }
+          return true;
+        }
+      }
+    }
+  }
+
   void confirmationDialog(BuildContext context, Project project) {
     showDialog(
         context: context,
@@ -185,6 +232,7 @@ class _UserAddProjectState extends State<UserAddProject> {
             actions: [
               ElevatedButton(
                   onPressed: () {
+                    widget.user.projects!.add(project);
                     DatabaseService()
                         .addProjectToUser(widget.user.id!, project.id!);
                     Navigator.of(context).pop();

@@ -175,7 +175,12 @@ class _LogInState extends State<LogIn> {
                                             ));
                                             break;
                                           case UserRole.Assistant:
-                                            // TODO: Handle this case.
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  UserMain(user: user)),
+                                            ));
                                             break;
                                         }
                                       }

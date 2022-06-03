@@ -28,7 +28,6 @@ class _AdminMainState extends State<AdminMain> {
   void initState() {
     super.initState();
 
-    //TODO refresh after deleting or updating of a user or project
     userList = DatabaseService().getAllUser();
     projectsList = DatabaseService().getAllProject();
   }
@@ -42,12 +41,15 @@ class _AdminMainState extends State<AdminMain> {
     String filter = "";
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final bool? refresh = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AdminAdd(),
-              )).then((value) => setState((() => {})));
+              ));
+          if (refresh ?? false) {
+            setState(() {});
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -100,6 +102,11 @@ class _AdminMainState extends State<AdminMain> {
 
                           projectsList =
                               DatabaseService().getAllProjectsFiltered(filter);
+                        });
+                      } else {
+                        setState(() {
+                          userList = DatabaseService().getAllUser();
+                          projectsList = DatabaseService().getAllProject();
                         });
                       }
                     },
@@ -161,16 +168,18 @@ class _AdminMainState extends State<AdminMain> {
                                                   .standardText(),
                                             ),
                                             IconButton(
-                                              onPressed: () {
-                                                Navigator.push(
+                                              onPressed: () async {
+                                                final bool? refresh =
+                                                    await Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               AdminChangeUser(
                                                                   user: user),
-                                                        ))
-                                                    .then((value) =>
-                                                        setState((() => {})));
+                                                        ));
+                                                if (refresh ?? false) {
+                                                  setState(() {});
+                                                }
                                               },
                                               icon: const Icon(Icons.settings),
                                             )
@@ -235,17 +244,22 @@ class _AdminMainState extends State<AdminMain> {
                                                   .standardText(),
                                             ),
                                             IconButton(
-                                                onPressed: () {
-                                                  Navigator.push(
+                                                onPressed: () async {
+                                                  final bool? refresh =
+                                                      await Navigator.push<
+                                                              bool>(
                                                           context,
                                                           MaterialPageRoute(
                                                             builder: (context) =>
                                                                 AdminChangeProject(
                                                                     project:
                                                                         project),
-                                                          ))
-                                                      .then((value) =>
-                                                          setState((() => {})));
+                                                          ));
+                                                  if (refresh ?? false) {
+                                                    setState(() {
+                                                      print("refreshed");
+                                                    });
+                                                  }
                                                 },
                                                 icon:
                                                     const Icon(Icons.settings))

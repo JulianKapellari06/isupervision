@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:intl/intl.dart';
 import 'package:isupervision/customWidgets/custom_textstyle.dart';
 import 'package:isupervision/objects/role.dart';
 
@@ -10,23 +11,25 @@ import '../service/database_service.dart';
 
 class AdminChangeProject extends StatefulWidget {
   late Project project;
-  TextEditingController? _idController;
-  TextEditingController? _titleController;
-  TextEditingController? _deadlineController;
-  TextEditingController? _descriptionController;
-  TextEditingController? _examDateController;
+  late TextEditingController _idController;
+  late TextEditingController _titleController;
+  late TextEditingController _deadlineController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _examDateController;
 
   AdminChangeProject({required this.project, Key? key}) : super(key: key) {
     _idController = TextEditingController(text: project.id.toString());
     _titleController = TextEditingController(text: project.title);
-    _deadlineController =
-        TextEditingController(text: project.deadline.toString());
+    _deadlineController = TextEditingController(
+        text: DateFormat("yyyy-MM-dd").format(project.deadline));
 
     //If attribute is null set text empty string
     _descriptionController =
         TextEditingController(text: project.description ?? "");
-    _examDateController =
-        TextEditingController(text: project.examDate.toString());
+    _examDateController = TextEditingController(
+        text: project.examDate == null
+            ? ""
+            : DateFormat("yyyy-MM-dd").format(project.examDate!));
   }
 
   @override
@@ -54,7 +57,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
               //Deletes the actual project and navigates back to admin main screen
               onPressed: () {
                 DatabaseService().deleteProject(widget.project.id);
-                Navigator.pop(context);
+                Navigator.of(context).pop(true);
               },
               icon: const Icon(Icons.delete))
         ],
@@ -107,19 +110,29 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
+                            icon: const Icon(Icons.edit_calendar),
+                            onTap: () async {
+                              DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: widget.project.deadline,
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100));
+
+                              if (newDate == null) {
+                                return;
+                              }
+                              setState(() {
+                                widget.project.deadline = newDate;
+                                widget._deadlineController.text =
+                                    "${newDate.day}-${newDate.month}-${newDate.year}";
+                              });
+                            },
                             controller: widget._deadlineController,
+                            readOnly: true,
                             width: 300,
                             validator: MultiValidator([
-                              DateValidator("dd-MM-yyyy",
-                                  errorText: "Wrong Date Format"),
                               RequiredValidator(errorText: "Required"),
                             ]),
-                            onSaved: (String? val) {
-                              if (widget.project.deadline != val) {
-                                widget.project.deadline = DateTime.parse(val!);
-                                _changes = true;
-                              }
-                            },
                           ),
                         ),
                         ListTile(
@@ -152,25 +165,33 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                             style: CustomTextStyles.standardText(),
                           ),
                           trailing: CustomTextField(
-                            controller: widget._examDateController,
-                            enabled: widget.project.projectRole ==
-                                ProjectRole.Master,
-                            width: 300,
-                            validator: widget.project.projectRole ==
-                                    ProjectRole.Master
-                                ? MultiValidator([
-                                    DateValidator("dd-MM-yyyy",
-                                        errorText: "Wrong Date Format"),
-                                    RequiredValidator(errorText: "Required"),
-                                  ])
-                                : MinLengthValidator(0, errorText: ""),
-                            onSaved: (String? val) {
-                              if (widget.project.examDate != val) {
-                                widget.project.examDate = DateTime.parse(val!);
-                                _changes = true;
-                              }
-                            },
-                          ),
+                              enabled: widget.project.projectRole ==
+                                  ProjectRole.Master,
+                              icon: const Icon(Icons.edit_calendar),
+                              onTap: () async {
+                                DateTime? newDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: widget.project.examDate ??
+                                        DateTime.now(),
+                                    firstDate: widget.project.deadline,
+                                    lastDate: DateTime(2100));
+
+                                if (newDate == null) {
+                                  return;
+                                }
+                                setState(() {
+                                  widget.project.examDate = newDate;
+                                  widget._examDateController.text =
+                                      "${newDate.day}-${newDate.month}-${newDate.year}";
+                                });
+                              },
+                              controller: widget._examDateController,
+                              readOnly: true,
+                              width: 300,
+                              validator: widget.project.projectRole !=
+                                      ProjectRole.Master
+                                  ? MinLengthValidator(0, errorText: "")
+                                  : RequiredValidator(errorText: "Required")),
                         ),
                         ListTile(
                           title: Text("Role: ",
@@ -198,6 +219,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                                                 widget.project.projectRole =
                                                     value!;
                                                 _changes = true;
+                                                clearEditingController(value);
                                               }
                                             });
                                           }),
@@ -307,7 +329,7 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
                           DatabaseService().deleteUserFromProjects(
                               widget.project.id!, deleteList);
                         }
-                        Navigator.pop(context);
+                        Navigator.of(context).pop(true);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -327,5 +349,17 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
         ),
       ),
     );
+  }
+
+  clearEditingController(ProjectRole role) {
+    switch (role) {
+      case ProjectRole.Bachelor:
+        widget._examDateController.clear();
+        break;
+      case ProjectRole.Project:
+        widget._examDateController.clear();
+        widget._descriptionController.clear();
+        break;
+    }
   }
 }

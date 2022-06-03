@@ -17,7 +17,7 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
-  String ip = "10.31.3.57";
+  String ip = "10.0.0.19";
 
   Future<User> loginUser(String email, password) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');
@@ -135,7 +135,6 @@ class DatabaseService {
 
   void updateUser(User user) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/updateUser');
-    print(json.encode(user.toJson()));
     Response response = await put(
       uri,
       headers: header,
@@ -201,14 +200,13 @@ class DatabaseService {
   }
 
   void deleteProjectsFromUser(int userId, List<int> list) async {
-    //TODO trash code
     String convert = "";
     for (int i = 0; i < list.length; i++) {
+      convert += list[i].toString();
       if (i == list.length - 1) {
-        convert += list[i].toString();
-      } else {
-        convert += list[i].toString() + ",";
+        continue;
       }
+      convert += ",";
     }
 
     Uri uri = Uri.parse(
@@ -241,20 +239,33 @@ class DatabaseService {
   }
 
   void deleteUserFromProjects(int projectId, List<int> list) async {
-    //TODO trash code
     String convert = "";
     for (int i = 0; i < list.length; i++) {
+      convert += list[i].toString();
       if (i == list.length - 1) {
-        convert += list[i].toString();
-      } else {
-        convert += list[i].toString() + ",";
+        continue;
       }
+      convert += ",";
     }
-    print("$projectId / $convert");
 
     Uri uri = Uri.parse(
         'http://$ip:8080/api/project/deleteUserFromProject/$projectId/$convert');
 
+    Response response = await put(
+      uri,
+      headers: header,
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    if (!(response.statusCode == 200)) {
+      throw "Unable to retrieve";
+    }
+  }
+
+  void updateLimits(
+      int id, int? projectLimit, int? bachelorLimit, int? masterLimit) async {
+    Uri uri = Uri.parse(
+        'http://$ip:8080/api/user/updateLimits/$id/$projectLimit,$bachelorLimit,$masterLimit');
     Response response = await put(
       uri,
       headers: header,

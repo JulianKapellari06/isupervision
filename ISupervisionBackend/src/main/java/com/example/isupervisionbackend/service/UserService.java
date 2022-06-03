@@ -99,4 +99,14 @@ public class UserService {
         user.getProjects().removeIf(item -> list.contains(item.getId()+""));
         userRepository.save(user);
     }
+
+    public void updateLimits(long user_id, String[] limits) {
+
+        User user = findUserById(user_id);
+        user.setProjectLimit(Integer.parseInt(limits[0]));
+        user.setBachelorLimit(Integer.parseInt(limits[1]));
+        user.setMasterLimit(Integer.parseInt(limits[2]));
+        userRepository.save(user);
+
+    }
 }

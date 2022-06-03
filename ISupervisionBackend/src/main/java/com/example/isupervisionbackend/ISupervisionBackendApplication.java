@@ -35,6 +35,7 @@ public class ISupervisionBackendApplication {
             User admin = new User("admin", "admin@gmail.com", "admin!", UserRole.Admin, projects);
             User student = new User("student", "student@gmail.com", "student!", UserRole.Student, projects);
             User assistant = new User("assistant", "assistant@gmail.com", "assistant!", UserRole.Assistant, projects);
+            User assistant2 = new User("assistant2", "assistant2@gmail.com", "assistant!", UserRole.Assistant, projects);
 
             Project project = new Project("ISupervisionProject", date, ProjectRole.Project, user);
             Project bachelor = new Project("ISupervisionBachelor", date, "Description", ProjectRole.Bachelor, user);
@@ -48,10 +49,10 @@ public class ISupervisionBackendApplication {
             admin.setProjects(List.of(project2));
             project2.setUser(List.of(admin));
 
-            assistant.setProjects(List.of(project, bachelor, master));
-            project.setUser(List.of(student, assistant));
-            bachelor.setUser(List.of(student, assistant));
-            master.setUser(List.of(student, assistant));
+            assistant2.setProjects(List.of(project, bachelor, master));
+            project.setUser(List.of(student, assistant2));
+            bachelor.setUser(List.of(student, assistant2));
+            master.setUser(List.of(student, assistant2));
 
             userRepository.save(student);
             userRepository.save(assistant);

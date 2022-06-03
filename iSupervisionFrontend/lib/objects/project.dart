@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/objects/user.dart';
 import 'package:json_annotation/json_annotation.dart';

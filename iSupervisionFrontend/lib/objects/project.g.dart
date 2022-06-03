@@ -23,9 +23,12 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'projectRole': _$ProjectRoleEnumMap[instance.projectRole],
       'description': instance.description,
-      'examDate': instance.examDate?.toIso8601String(),
+      'examDate': instance.examDate == null
+          ? instance.examDate?.toIso8601String
+          : DateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(instance.examDate!),
       'title': instance.title,
-      'deadline': instance.deadline.toIso8601String(),
+      'deadline':
+          DateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(instance.deadline),
       'id': instance.id,
       'user': instance.user?.map((e) => e.toJson()).toList(),
     };

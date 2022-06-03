@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,10 @@ public class UserController {
     @PostMapping("/addProjectAssistant/{user_id}")
     public void addProjectAssistant(@RequestBody Project project, @PathVariable long user_id){
         userService.addProjectAssistant(project, user_id);
+    }
+    @PutMapping("/updateLimits/{user_id}/{limits}")
+    public void updateLimits(@PathVariable long user_id, @PathVariable String[] limits){
+        userService.updateLimits(user_id, limits);
     }
 
 }

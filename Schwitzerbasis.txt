@@ -1,26 +1,34 @@
 Todo:
 Password Encryption
-Update Admin Main after Navigator.pop
 TextField Icons & AdminAdd errorfield & Text Location
 Admin Change User -> Option to add Project
 Change primarySwatch Color -> Admin/Assistant Red | Student Blue
 Errorhandling Http Requests
-User-Main: Update Screen after removing project
-User-Main: Update Screen after adding project
-UserAddProject: Add Bachelor after Project finished (Date.expired)
-DateTime Objects
+
+Update Admin Main after Navigator.pop		->
+User-Main: Update Screen after removing project      -> didChangeDependencies Method
+User-Main: Update Screen after adding project	->
+Updating every Screen!!!!!!!!!!!!!!!!!
+
+CREATE TESTDATA!!!
+README!!!
 DESIGN!!!
 
 Schwitzer:
 Description TextField more lines
-DatePicker
 Projects User aufteilen auf Projects/Bachelor/Master
 Read IP for DatabaseService
 Admin Main filter for Roles
 Security
 UserAddProject getAllProjectwithout user
+Assistant: If wants to add Project but limit reached ask whether he wants to put limit +1
+Code Structure
 
 Error:
 No / in password
 The request was rejected because the URL contained a potentially malicious String ";" database
 DeleteUserFromProject doesnt work
+Assistant User bei projekte anzeigen geht nicht
+
+ReadMe:
+Mehrere Studenten erlaubt. Möglicherweiße Partnerarbeiten / Teamarbeiten

@@ -11,9 +11,11 @@ class CustomTextField extends StatelessWidget {
   final bool isEmail;
   final TextEditingController? controller;
   final bool? enabled;
+  final bool readOnly;
 
   const CustomTextField(
       {Key? key,
+      this.readOnly = false,
       this.onTap,
       this.enabled,
       this.hintText,
@@ -35,6 +37,7 @@ class CustomTextField extends StatelessWidget {
         style: const TextStyle(color: Color(0xFFee707d)),
         controller: controller,
         enabled: enabled,
+        readOnly: readOnly,
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
