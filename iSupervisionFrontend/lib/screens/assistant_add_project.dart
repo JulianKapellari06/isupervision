@@ -8,7 +8,7 @@ import '../objects/role.dart';
 import '../service/database_service.dart';
 
 class AssistantAddProject extends StatefulWidget {
-  AssistantAddProject({Key? key}) : super(key: key);
+  const AssistantAddProject({Key? key}) : super(key: key);
 
   @override
   State<AssistantAddProject> createState() => _AssistantAddProjectState();
@@ -215,6 +215,8 @@ class _AssistantAddProjectState extends State<AssistantAddProject> {
       case ProjectRole.Project:
         _examDateController.clear();
         _descriptionController.clear();
+        break;
+      case ProjectRole.Master:
         break;
     }
   }

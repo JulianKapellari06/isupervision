@@ -8,6 +8,7 @@ import '../customWidgets/custom_textfield.dart';
 import '../objects/user.dart';
 import '../service/database_service.dart';
 
+// ignore: must_be_immutable
 class AdminChangeUser extends StatefulWidget {
   User user;
 
@@ -33,10 +34,6 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
   bool _changes = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<int> deleteList = List.empty(growable: true);
-
-  int? _projectLimits;
-  int? _bachelorLimits;
-  int? _masterLimits;
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +158,7 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                                 if (value != widget._passwordController!.text) {
                                   return "Passwords do not match";
                                 }
+                                return null;
                               },
                             ),
                           ),

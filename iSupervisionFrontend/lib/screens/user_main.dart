@@ -12,9 +12,9 @@ import '../objects/user.dart';
 import 'assistant_add_project.dart';
 
 class UserMain extends StatefulWidget {
-  User user;
+  final User user;
 
-  UserMain({required this.user, Key? key}) : super(key: key);
+  const UserMain({required this.user, Key? key}) : super(key: key);
 
   @override
   State<UserMain> createState() => _UserMainState();
@@ -42,7 +42,6 @@ class _UserMainState extends State<UserMain> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -56,7 +55,7 @@ class _UserMainState extends State<UserMain> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: ((context) => AssistantAddProject())));
+                          builder: ((context) => const AssistantAddProject())));
                 },
                 icon: const Icon(Icons.fiber_new)),
           if (widget.user.userRole == UserRole.Assistant)

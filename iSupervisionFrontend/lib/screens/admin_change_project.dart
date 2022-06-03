@@ -9,6 +9,7 @@ import '../objects/project.dart';
 
 import '../service/database_service.dart';
 
+// ignore: must_be_immutable
 class AdminChangeProject extends StatefulWidget {
   late Project project;
   late TextEditingController _idController;
@@ -359,6 +360,8 @@ class _AdminChangeProjectState extends State<AdminChangeProject> {
       case ProjectRole.Project:
         widget._examDateController.clear();
         widget._descriptionController.clear();
+        break;
+      case ProjectRole.Master:
         break;
     }
   }

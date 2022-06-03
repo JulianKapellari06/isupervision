@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:isupervision/customWidgets/custom_textstyle.dart';
 import 'package:isupervision/objects/project.dart';
@@ -13,8 +14,8 @@ import 'admin_change_user.dart';
 import 'login.dart';
 
 class AdminMain extends StatefulWidget {
-  User admin;
-  AdminMain({required this.admin, Key? key}) : super(key: key);
+  final User admin;
+  const AdminMain({required this.admin, Key? key}) : super(key: key);
 
   @override
   State<AdminMain> createState() => _AdminMainState();
@@ -42,14 +43,11 @@ class _AdminMainState extends State<AdminMain> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final bool? refresh = await Navigator.push(
+          Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AdminAdd(),
-              ));
-          if (refresh ?? false) {
-            setState(() {});
-          }
+                builder: (context) => const AdminAdd(),
+              )).then(onGoBack);
         },
         child: const Icon(Icons.add),
       ),
@@ -169,17 +167,14 @@ class _AdminMainState extends State<AdminMain> {
                                             ),
                                             IconButton(
                                               onPressed: () async {
-                                                final bool? refresh =
-                                                    await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AdminChangeUser(
-                                                                  user: user),
-                                                        ));
-                                                if (refresh ?? false) {
-                                                  setState(() {});
-                                                }
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AdminChangeUser(
+                                                        user: user,
+                                                      ),
+                                                    )).then(onGoBack);
                                               },
                                               icon: const Icon(Icons.settings),
                                             )
@@ -234,7 +229,8 @@ class _AdminMainState extends State<AdminMain> {
                                                   .standardText(),
                                             ),
                                             Text(
-                                              project.deadline.toString(),
+                                              DateFormat("yyyy-MM-dd")
+                                                  .format(project.deadline),
                                               style: CustomTextStyles
                                                   .standardText(),
                                             ),
@@ -245,21 +241,14 @@ class _AdminMainState extends State<AdminMain> {
                                             ),
                                             IconButton(
                                                 onPressed: () async {
-                                                  final bool? refresh =
-                                                      await Navigator.push<
-                                                              bool>(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AdminChangeProject(
-                                                                    project:
-                                                                        project),
-                                                          ));
-                                                  if (refresh ?? false) {
-                                                    setState(() {
-                                                      print("refreshed");
-                                                    });
-                                                  }
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AdminChangeProject(
+                                                          project: project,
+                                                        ),
+                                                      )).then(onGoBack);
                                                 },
                                                 icon:
                                                     const Icon(Icons.settings))
@@ -284,5 +273,13 @@ class _AdminMainState extends State<AdminMain> {
         ),
       ),
     );
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    print("Geht");
+    setState(() {
+      userList = DatabaseService().getAllUser();
+      projectsList = DatabaseService().getAllProject();
+    });
   }
 }

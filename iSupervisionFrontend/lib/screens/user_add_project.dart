@@ -8,8 +8,8 @@ import '../objects/user.dart';
 import '../service/database_service.dart';
 
 class UserAddProject extends StatefulWidget {
-  User user;
-  UserAddProject({Key? key, required this.user}) : super(key: key);
+  final User user;
+  const UserAddProject({Key? key, required this.user}) : super(key: key);
 
   @override
   State<UserAddProject> createState() => _UserAddProjectState();
@@ -174,6 +174,8 @@ class _UserAddProjectState extends State<UserAddProject> {
               return false;
             }
 
+            break;
+          case ProjectRole.Project:
             break;
         }
         return true;

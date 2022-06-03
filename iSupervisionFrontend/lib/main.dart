@@ -1,16 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:isupervision/objects/project.dart';
-import 'package:isupervision/objects/role.dart';
-import 'package:isupervision/screens/admin_add.dart';
-import 'package:isupervision/screens/admin_main.dart';
 import 'package:isupervision/screens/login.dart';
-import 'package:isupervision/screens/user_add_project.dart';
-import 'package:isupervision/screens/user_main.dart';
-import 'package:isupervision/service/database_service.dart';
-
-import 'objects/user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: generateMaterialColor(const Color(0xFFee707d)),
       ),
-      home: LogIn(),
+      home: const LogIn(),
     );
   }
 

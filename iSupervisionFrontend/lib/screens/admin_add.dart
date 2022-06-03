@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_number_picker/flutter_number_picker.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:intl/intl.dart';
 import 'package:isupervision/objects/project.dart';
 
 import '../customWidgets/custom_textfield.dart';
@@ -11,7 +10,7 @@ import '../objects/user.dart';
 import '../service/database_service.dart';
 
 class AdminAdd extends StatefulWidget {
-  AdminAdd({Key? key}) : super(key: key);
+  const AdminAdd({Key? key}) : super(key: key);
 
   @override
   State<AdminAdd> createState() => _AdminAddState();
@@ -136,6 +135,7 @@ class _AdminAddState extends State<AdminAdd> {
                             if (value != _passwordController.text) {
                               return "Passwords do not match";
                             }
+                            return null;
                           },
                         ),
                       ),
@@ -446,6 +446,8 @@ class _AdminAddState extends State<AdminAdd> {
       case ProjectRole.Project:
         _examDateController.clear();
         _descriptionController.clear();
+        break;
+      case ProjectRole.Master:
         break;
     }
   }

@@ -17,7 +17,7 @@ class DatabaseService {
     'Content-type': 'application/json'
   };
 
-  String ip = "10.0.0.19";
+  String ip = "localhost";
 
   Future<User> loginUser(String email, password) async {
     Uri uri = Uri.parse('http://$ip:8080/api/user/login/$email/$password');
@@ -64,19 +64,6 @@ class DatabaseService {
           )
           .toList();
 
-      return user;
-    } else {
-      throw "Unable to retrieve";
-    }
-  }
-
-//Not Used
-  Future<User> getUserById(int id) async {
-    Uri uri = Uri.parse('http://$ip:8080/api/user/getUserById/$id');
-    Response response = await get(uri, headers: header);
-
-    if (response.statusCode == 200) {
-      User user = User.fromJson(jsonDecode(response.body));
       return user;
     } else {
       throw "Unable to retrieve";

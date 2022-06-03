@@ -20,7 +20,6 @@ Projects User aufteilen auf Projects/Bachelor/Master
 Read IP for DatabaseService
 Admin Main filter for Roles
 Security
-UserAddProject getAllProjectwithout user
 Assistant: If wants to add Project but limit reached ask whether he wants to put limit +1
 Code Structure
 
