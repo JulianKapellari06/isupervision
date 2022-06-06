@@ -47,9 +47,6 @@ class CustomTextField extends StatelessWidget {
           prefixIcon: icon != null
               ? InkWell(
                   onTap: onTap,
-                  onHover: (value) {
-                    //TODO
-                  },
                   child: icon,
                 )
               : null,

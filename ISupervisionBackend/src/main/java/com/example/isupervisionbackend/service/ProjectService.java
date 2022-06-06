@@ -2,7 +2,6 @@ package com.example.isupervisionbackend.service;
 
 import com.example.isupervisionbackend.model.Project;
 import com.example.isupervisionbackend.model.ProjectRole;
-import com.example.isupervisionbackend.model.User;
 import com.example.isupervisionbackend.repository.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

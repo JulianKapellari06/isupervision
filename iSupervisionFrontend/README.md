@@ -1,16 +1,27 @@
 # isupervision
 
-A new Flutter project.
-
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Create schema in MySQL Workbench with name mydb
 
-A few resources to get you started if this is your first Flutter project:
+2. If possible create database user with username = root and password = root. Otherwise change username or password in resources/application.properties
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+3. Start backend application: Open and run in IntelliJ
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+4. Start frontend application: Open VSCode -> Strg + S in pubspec.yaml file. Then on the right bottom where stands windows choose Chrome.
+Flutter and Chrome also has to be installed. Run the application in main.dart!
+
+5. Everything should work :) 
+
+## Bugs
+
+There are still some bugs in it, which i couldn't detect and repair. 
+
+1. All Screens wont get updated if something changes. 
+2. Users at projects arent listet because of JSON
+3. And some little mistakes like: Assistant can sign in into Project which is expired... and so on
+
+## TODO's
+
+Focus on that project was functionality, so the design has suffered a little bit. Security doesn't even exist. So passwords are saved as raw plain text and everyone who knows the https request has access to it. Obviously that must be improved.
+

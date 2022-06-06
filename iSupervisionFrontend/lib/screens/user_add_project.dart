@@ -53,10 +53,21 @@ class _UserAddProjectState extends State<UserAddProject> {
                     onTap: () {
                       _formKey.currentState!.save();
                       if (filter.isNotEmpty) {
-                        setState(() {
-                          projectList =
-                              DatabaseService().getAllProjectsFiltered(filter);
-                        });
+                        try {
+                          setState(() {
+                            projectList = DatabaseService()
+                                .getAllProjectsFiltered(filter);
+                          });
+                        } on Exception catch (_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                              'Something went wrong. Please try again!',
+                              style: CustomTextStyles.errorText(),
+                              textAlign: TextAlign.center,
+                            )),
+                          );
+                        }
                       }
                     },
                     onSaved: (String? val) {
@@ -70,73 +81,71 @@ class _UserAddProjectState extends State<UserAddProject> {
               Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      child: Column(
-                        children: [
-                          FutureBuilder(
-                            future: projectList,
-                            builder: (context, AsyncSnapshot snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                if (snapshot.hasError) {
-                                  return Center(
-                                      child: Text('${snapshot.error} occured'));
-                                }
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (context, index) {
-                                    Project project = snapshot.data[index];
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(),
-                                      ),
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(
-                                            project.title,
-                                            style:
-                                                CustomTextStyles.standardText(),
-                                          ),
-                                          Text(
-                                            project.deadline.toString(),
-                                            style:
-                                                CustomTextStyles.standardText(),
-                                          ),
-                                          Text(
-                                            project.projectRole.name,
-                                            style:
-                                                CustomTextStyles.standardText(),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (checkAddProject(
-                                                    project, context)) {
-                                                  confirmationDialog(
-                                                      context, project);
-                                                }
-                                              },
-                                              icon: const Icon(
-                                                Icons.add_task,
-                                                color: Colors.white,
-                                              ))
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: CircularProgressIndicator());
+                    child: Column(
+                      children: [
+                        FutureBuilder(
+                          future: projectList,
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('${snapshot.error} occured'));
                               }
-                            },
-                          )
-                        ],
-                      ),
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (context, index) {
+                                  Project project = snapshot.data[index];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(),
+                                    ),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          project.title,
+                                          style:
+                                              CustomTextStyles.standardText(),
+                                        ),
+                                        Text(
+                                          project.deadline.toString(),
+                                          style:
+                                              CustomTextStyles.standardText(),
+                                        ),
+                                        Text(
+                                          project.projectRole.name,
+                                          style:
+                                              CustomTextStyles.standardText(),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              if (checkAddProject(
+                                                  project, context)) {
+                                                confirmationDialog(
+                                                    context, project);
+                                              }
+                                            },
+                                            icon: const Icon(
+                                              Icons.add_task,
+                                              color: Colors.white,
+                                            ))
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                          },
+                        )
+                      ],
                     ),
                   ),
                 ],
@@ -235,9 +244,20 @@ class _UserAddProjectState extends State<UserAddProject> {
               ElevatedButton(
                   onPressed: () {
                     widget.user.projects!.add(project);
-                    DatabaseService()
-                        .addProjectToUser(widget.user.id!, project.id!);
-                    Navigator.of(context).pop();
+                    try {
+                      DatabaseService()
+                          .addProjectToUser(widget.user.id!, project.id!);
+                      Navigator.of(context).pop();
+                    } on Exception catch (_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                          'Something went wrong. Please try again!',
+                          style: CustomTextStyles.errorText(),
+                          textAlign: TextAlign.center,
+                        )),
+                      );
+                    }
                   },
                   child: const Text("Yes")),
               ElevatedButton(

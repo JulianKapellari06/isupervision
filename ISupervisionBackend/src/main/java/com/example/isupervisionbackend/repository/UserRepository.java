@@ -1,16 +1,12 @@
 package com.example.isupervisionbackend.repository;
 
-import com.example.isupervisionbackend.model.Project;
 import com.example.isupervisionbackend.model.User;
-import com.example.isupervisionbackend.model.UserRole;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Integer> {

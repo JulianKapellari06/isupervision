@@ -232,13 +232,24 @@ class _AdminAddState extends State<AdminAdd> {
                                 user.masterLimit = _masterLimits;
                                 user.projectLimit = _projectLimits;
                               }
-                              DatabaseService().addUser(user);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('Inserted user to database...')),
-                              );
-                              clearTextInput(true);
+                              try {
+                                DatabaseService().addUser(user);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Inserted user to database...')),
+                                );
+                                clearTextInput(true);
+                              } on Exception catch (_) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                    'Something went wrong. Please try again!',
+                                    style: CustomTextStyles.errorText(),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -407,13 +418,24 @@ class _AdminAddState extends State<AdminAdd> {
                             if (_formKeyProject.currentState!.validate()) {
                               _formKeyProject.currentState!.save();
 
-                              DatabaseService().addProject(project);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Inserted project to database...')),
-                              );
-                              clearTextInput(false);
+                              try {
+                                DatabaseService().addProject(project);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Inserted project to database...')),
+                                );
+                                clearTextInput(false);
+                              } on Exception catch (_) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                    'Something went wrong. Please try again!',
+                                    style: CustomTextStyles.errorText(),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isupervision/customWidgets/custom_textfield.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:isupervision/customWidgets/custom_textstyle.dart';
 import 'package:isupervision/objects/role.dart';
 import 'package:isupervision/screens/admin_main.dart';
 import 'package:isupervision/screens/user_main.dart';
@@ -154,34 +155,46 @@ class _LogInState extends State<LogIn> {
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
 
-                                        User user = await DatabaseService()
-                                            .loginUser(email, password);
-
-                                        switch (user.userRole) {
-                                          case UserRole.Student:
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  UserMain(user: user)),
-                                            ));
-                                            break;
-                                          case UserRole.Admin:
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  AdminMain(admin: user)),
-                                            ));
-                                            break;
-                                          case UserRole.Assistant:
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  UserMain(user: user)),
-                                            ));
-                                            break;
+                                        try {
+                                          User user = await DatabaseService()
+                                              .loginUser(email, password);
+                                          switch (user.userRole) {
+                                            case UserRole.Student:
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    UserMain(user: user)),
+                                              ));
+                                              break;
+                                            case UserRole.Admin:
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    AdminMain(admin: user)),
+                                              ));
+                                              break;
+                                            case UserRole.Assistant:
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    UserMain(user: user)),
+                                              ));
+                                              break;
+                                          }
+                                        } on Exception catch (_) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                              'Email or password wrong',
+                                              style:
+                                                  CustomTextStyles.errorText(),
+                                              textAlign: TextAlign.center,
+                                            )),
+                                          );
                                         }
                                       }
                                     },

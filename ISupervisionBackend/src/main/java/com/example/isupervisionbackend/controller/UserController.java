@@ -5,16 +5,8 @@ import com.example.isupervisionbackend.model.Project;
 import com.example.isupervisionbackend.model.User;
 import com.example.isupervisionbackend.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpHeaders;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(maxAge = 3600)
 @RestController

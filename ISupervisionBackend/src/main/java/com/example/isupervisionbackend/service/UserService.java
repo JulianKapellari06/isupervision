@@ -21,6 +21,7 @@ public class UserService {
     private ProjectRepository projectRepository;
     private ProjectService projectService;
 
+
     public Iterable<User> getAll() {
         return userRepository.findAll();
     }
@@ -28,6 +29,7 @@ public class UserService {
     public User register(User user) {
 
         if (!userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+
             return userRepository.save(user);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email already used");
@@ -96,7 +98,7 @@ public class UserService {
 
         List<String> list = Arrays.asList(project_ids);
 
-        user.getProjects().removeIf(item -> list.contains(item.getId()+""));
+        user.getProjects().removeIf(item -> list.contains(item.getId() + ""));
         userRepository.save(user);
     }
 

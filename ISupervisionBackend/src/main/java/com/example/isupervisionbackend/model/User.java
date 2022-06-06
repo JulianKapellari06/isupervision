@@ -1,10 +1,6 @@
 package com.example.isupervisionbackend.model;
 
-import com.example.isupervisionbackend.config.CustomListSerializer;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,7 +58,10 @@ public class User {
         this.projects = projects;
     }
 
+
     public void addProject(Project project) {
         projects.add(project);
     }
+
+
 }

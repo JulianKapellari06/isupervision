@@ -57,10 +57,21 @@ class _AdminMainState extends State<AdminMain> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                  projectsList = DatabaseService().getAllProject();
-                  userList = DatabaseService().getAllUser();
-                });
+                try {
+                  setState(() {
+                    projectsList = DatabaseService().getAllProject();
+                    userList = DatabaseService().getAllUser();
+                  });
+                } on Exception catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                      'Something went wrong. Please try again!',
+                      style: CustomTextStyles.errorText(),
+                      textAlign: TextAlign.center,
+                    )),
+                  );
+                }
               },
               icon: const Icon(Icons.refresh)),
           IconButton(
@@ -93,19 +104,30 @@ class _AdminMainState extends State<AdminMain> {
                     ),
                     onTap: () {
                       _formKey.currentState!.save();
-                      if (filter.isNotEmpty) {
-                        setState(() {
-                          userList =
-                              DatabaseService().getAllUserFiltered(filter);
+                      try {
+                        if (filter.isNotEmpty) {
+                          setState(() {
+                            userList =
+                                DatabaseService().getAllUserFiltered(filter);
 
-                          projectsList =
-                              DatabaseService().getAllProjectsFiltered(filter);
-                        });
-                      } else {
-                        setState(() {
-                          userList = DatabaseService().getAllUser();
-                          projectsList = DatabaseService().getAllProject();
-                        });
+                            projectsList = DatabaseService()
+                                .getAllProjectsFiltered(filter);
+                          });
+                        } else {
+                          setState(() {
+                            userList = DatabaseService().getAllUser();
+                            projectsList = DatabaseService().getAllProject();
+                          });
+                        }
+                      } on Exception catch (_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                            'Something went wrong. Please try again!',
+                            style: CustomTextStyles.errorText(),
+                            textAlign: TextAlign.center,
+                          )),
+                        );
                       }
                     },
                     onSaved: (String? val) {
@@ -276,7 +298,6 @@ class _AdminMainState extends State<AdminMain> {
   }
 
   FutureOr onGoBack(dynamic value) {
-    print("Geht");
     setState(() {
       userList = DatabaseService().getAllUser();
       projectsList = DatabaseService().getAllProject();

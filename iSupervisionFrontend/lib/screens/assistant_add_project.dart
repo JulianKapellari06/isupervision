@@ -181,12 +181,23 @@ class _AssistantAddProjectState extends State<AssistantAddProject> {
                     if (_formKeyProject.currentState!.validate()) {
                       _formKeyProject.currentState!.save();
 
-                      DatabaseService().addProject(project);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Inserted project to database...')),
-                      );
-                      Navigator.pop(context);
+                      try {
+                        DatabaseService().addProject(project);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Inserted project to database...')),
+                        );
+                        Navigator.pop(context);
+                      } on Exception catch (_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                            'Something went wrong. Please try again!',
+                            style: CustomTextStyles.errorText(),
+                            textAlign: TextAlign.center,
+                          )),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

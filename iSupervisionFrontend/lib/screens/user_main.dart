@@ -280,11 +280,22 @@ class _UserMainState extends State<UserMain> {
                   ElevatedButton(
                       onPressed: () {
                         if (_changed) {
-                          DatabaseService().updateLimits(
-                              widget.user.id!,
-                              widget.user.projectLimit,
-                              widget.user.bachelorLimit,
-                              widget.user.masterLimit);
+                          try {
+                            DatabaseService().updateLimits(
+                                widget.user.id!,
+                                widget.user.projectLimit,
+                                widget.user.bachelorLimit,
+                                widget.user.masterLimit);
+                          } on Exception catch (_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                'Something went wrong. Please try again!',
+                                style: CustomTextStyles.errorText(),
+                                textAlign: TextAlign.center,
+                              )),
+                            );
+                          }
                         }
                         Navigator.of(context).pop();
                       },

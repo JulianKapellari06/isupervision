@@ -46,8 +46,19 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
         actions: [
           IconButton(
               onPressed: () {
-                DatabaseService().deleteUser(widget.user.id);
-                Navigator.pop(context);
+                try {
+                  DatabaseService().deleteUser(widget.user.id);
+                  Navigator.pop(context);
+                } on Exception catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                      'Something went wrong. Please try again!',
+                      style: CustomTextStyles.errorText(),
+                      textAlign: TextAlign.center,
+                    )),
+                  );
+                }
               },
               icon: const Icon(Icons.delete))
         ],
@@ -344,11 +355,33 @@ class _AdminChangeUserState extends State<AdminChangeUser> {
                           widget.user.projectLimit = 0;
                         }
                         if (_changes) {
-                          DatabaseService().updateUser(widget.user);
+                          try {
+                            DatabaseService().updateUser(widget.user);
+                          } on Exception catch (_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                'Something went wrong. Please try again!',
+                                style: CustomTextStyles.errorText(),
+                                textAlign: TextAlign.center,
+                              )),
+                            );
+                          }
                         }
                         if (deleteList.isNotEmpty) {
-                          DatabaseService().deleteProjectsFromUser(
-                              widget.user.id!, deleteList);
+                          try {
+                            DatabaseService().deleteProjectsFromUser(
+                                widget.user.id!, deleteList);
+                          } on Exception catch (_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                'Something went wrong. Please try again!',
+                                style: CustomTextStyles.errorText(),
+                                textAlign: TextAlign.center,
+                              )),
+                            );
+                          }
                         }
                         Navigator.pop(context);
                       }

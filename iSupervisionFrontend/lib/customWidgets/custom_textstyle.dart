@@ -17,4 +17,11 @@ class CustomTextStyles {
       fontWeight: FontWeight.bold,
     );
   }
+
+  static TextStyle errorText() {
+    return const TextStyle(
+      color: Colors.red,
+      fontSize: 16,
+    );
+  }
 }

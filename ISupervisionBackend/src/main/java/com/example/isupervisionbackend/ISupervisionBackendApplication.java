@@ -9,10 +9,9 @@ import com.example.isupervisionbackend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,44 +25,60 @@ public class ISupervisionBackendApplication {
     @Bean
     public CommandLineRunner run(UserRepository userRepository, ProjectRepository projectRepository) throws Exception {
         return (String[] args) -> {
+            
 
-            Date date = new Date();
+            Date finished = new Date(121,11,19);
+            Date date = new Date(122,7,10);
+            Date date1 = new Date(122,9,11);
+            Date date2 = new Date(123,7,10);
 
-            List<Project> projects = new ArrayList<>();
-            List<User> user = new ArrayList<>();
 
-            User admin = new User("admin", "admin@gmail.com", "admin!", UserRole.Admin, projects);
-            User student = new User("student", "student@gmail.com", "student!", UserRole.Student, projects);
-            User assistant = new User("assistant", "assistant@gmail.com", "assistant!", UserRole.Assistant, projects);
-            User assistant2 = new User("assistant2", "assistant2@gmail.com", "assistant!", UserRole.Assistant, projects);
+            User admin = new User("Admin", "admin@gmail.com",  "admin!", UserRole.Admin, null);
 
-            Project project = new Project("ISupervisionProject", date, ProjectRole.Project, user);
-            Project bachelor = new Project("ISupervisionBachelor", date, "Description", ProjectRole.Bachelor, user);
-            Project master = new Project("ISupervisionMaster", date, date, "Description", ProjectRole.Master, user);
-            Project project2 = new Project("test1", date, ProjectRole.Project, user);
-            Project bachelor2 = new Project("test2", date, "Description", ProjectRole.Bachelor, user);
-            Project master2 = new Project("test3", date, date, "Description", ProjectRole.Master, user);
+            User student = new User("Student", "student@gmail.com",  "student!", UserRole.Student, null);
+            User kapellari = new User("Kapellari", "kapellari@gmail.com",  "123456!", UserRole.Student, null);
+            User alamer = new User("Alamer", "alamer@gmail.com",  "AlamerIsCool!", UserRole.Student, null);
+            User sekic = new User("Sekic", "sekic@gmail.com",  "Password!", UserRole.Student, null);
+
+            User assistant = new User("Assistant", "assistant@gmail.com",  "assistant!", UserRole.Assistant, 10,5,5, null);
+            User stettinger = new User("Stettinger", "stettinger@gmail.com",  "bestPasswordOnEarth!", UserRole.Assistant,5,3,3, null);
+
+            Project project = new Project("ISupervisionProject", finished, ProjectRole.Project, null);
+            Project bachelor = new Project("ISupervisionBachelor", finished, "Description", ProjectRole.Bachelor, null);
+            Project master = new Project("ISupervisionMaster", finished, date, "Description", ProjectRole.Master, null);
+            Project dynamicMenu = new Project("DynamicMenu", date1, ProjectRole.Project, null);
+            Project autoGrowBox = new Project("AutoGrowBox", date1, "Full automatic box to grow plants", ProjectRole.Bachelor, null);
+            Project smartFan = new Project("SmartFan", date1, date2, "Obviously a smart fan", ProjectRole.Master, null);
+
+            assistant.setProjects(List.of(dynamicMenu));
+            stettinger.setProjects(List.of(autoGrowBox, smartFan));
 
             student.setProjects(List.of(project, bachelor, master));
+            kapellari.setProjects(List.of(project, dynamicMenu));
+            alamer.setProjects(List.of(project, bachelor, smartFan));
+            sekic.setProjects(List.of(project,bachelor,master,autoGrowBox));
 
-            admin.setProjects(List.of(project2));
-            project2.setUser(List.of(admin));
+            project.setUser(List.of(student, kapellari,alamer, sekic));
+            bachelor.setUser(List.of(student,alamer, sekic));
+            master.setUser(List.of(student,alamer));
+            dynamicMenu.setUser(List.of(kapellari, assistant));
+            autoGrowBox.setUser(List.of(stettinger, sekic));
+            smartFan.setUser(List.of(stettinger, alamer));
 
-            assistant2.setProjects(List.of(project, bachelor, master));
-            project.setUser(List.of(student, assistant2));
-            bachelor.setUser(List.of(student, assistant2));
-            master.setUser(List.of(student, assistant2));
 
             userRepository.save(student);
             userRepository.save(assistant);
             userRepository.save(admin);
+            userRepository.save(kapellari);
+            userRepository.save(sekic);
+            userRepository.save(alamer);
 
             projectRepository.save(project);
             projectRepository.save(bachelor);
             projectRepository.save(master);
-            projectRepository.save(project2);
-            projectRepository.save(bachelor2);
-            projectRepository.save(master2);
+            projectRepository.save(dynamicMenu);
+            projectRepository.save(smartFan);
+            projectRepository.save(autoGrowBox);
 
         };
     }
