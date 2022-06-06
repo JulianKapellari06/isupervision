@@ -25,7 +25,7 @@ public class ISupervisionBackendApplication {
     @Bean
     public CommandLineRunner run(UserRepository userRepository, ProjectRepository projectRepository) throws Exception {
         return (String[] args) -> {
-            
+
 
             Date finished = new Date(121,11,19);
             Date date = new Date(122,7,10);
